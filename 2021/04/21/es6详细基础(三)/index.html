@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/css/GalMenu.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Dou Gengxin">
+
+
+
+
+
+<title>ES6详细基础(三) | 代码时代</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">我的主页</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">我的主页</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ES6详细基础(三)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Dou Gengxin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 21, 2021&nbsp;&nbsp;14:40:40</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/es6/">es6</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="十三、Generator"><a href="#十三、Generator" class="headerlink" title="十三、Generator"></a>十三、Generator</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Generator 函数是 ES6 提供的一种异步编程解决方案。语法上，可以把它理解成一个状态机，封装了多个内部状态。在Generator 函数执行时会返回一个遍历器对象，可以一次遍历函数内的每一个状态。</p>
+<h3 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h3><p>星号,用来修饰函数(只能放在function关键词与函数名的中间位置)，yield 用来定义状态(异步操作)</p>
+<h3 id="Generator函数的创建"><a href="#Generator函数的创建" class="headerlink" title="Generator函数的创建"></a>Generator函数的创建</h3><p>定义Generator函数及状态的定义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function * f()&#123;&#x2F;&#x2F;Generator函数</span><br><span class="line">    yield &quot;播放&quot;;</span><br><span class="line">    yield &quot;停止&quot;;</span><br><span class="line">    yield &quot;快进&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generator函数的返回值"><a href="#Generator函数的返回值" class="headerlink" title="Generator函数的返回值"></a>Generator函数的返回值</h3><p>注：Generator函数中for…of只能获取状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function * f()&#123;&#x2F;&#x2F;Generator函数</span><br><span class="line">                yield &quot;播放&quot;;</span><br><span class="line">                yield &quot;停止&quot;;</span><br><span class="line">                yield &quot;快进&quot;;</span><br><span class="line">                return &quot;我是函数返回值&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">            let p&#x3D;f();</span><br><span class="line">            &#x2F;&#x2F; p.next();</span><br><span class="line">            &#x2F;&#x2F; p.next();</span><br><span class="line">            &#x2F;&#x2F; p.next();</span><br><span class="line">            &#x2F;&#x2F; console.log(p.next()); &#x2F;&#x2F;注：与遍历器不同的是Generator函数的next()可以获取到函数的返回值。</span><br><span class="line">            for(let item of p)&#123;&#x2F;&#x2F;由于for...of是根据done的值来判断循环是否结束，因此，只会输出状态，不会输出返回值。</span><br><span class="line">                &#x2F;&#x2F;console.log(item);</span><br><span class="line">            &#125;</span><br><span class="line">            console.log(p.next());</span><br></pre></td></tr></table></figure>
+
+<h3 id="Generator函数使用next方法传递参数"><a href="#Generator函数使用next方法传递参数" class="headerlink" title="Generator函数使用next方法传递参数"></a>Generator函数使用next方法传递参数</h3><p>next方法传递的参数是给上一个yield赋值。同时执行上一个yield和当前yield之间的代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function * f() &#123;</span><br><span class="line">    let a&#x3D;yield &quot;播放&quot;; </span><br><span class="line">    console.log(&quot;a&#x3D;&quot;+a);</span><br><span class="line">    let b&#x3D;yield &quot;停止&quot;;</span><br><span class="line">    console.log(&quot;b&#x3D;&quot;+b);</span><br><span class="line">    let c&#x3D;yield &quot;快进&quot;;</span><br><span class="line">    console.log(&quot;c&#x3D;&quot;+c);</span><br><span class="line">    let d&#x3D;yield &quot;快退&quot;;</span><br><span class="line">    console.log(&quot;d&#x3D;&quot;+d);</span><br><span class="line">    let e&#x3D;yield &quot;录音&quot;;</span><br><span class="line">    console.log(&quot;e&#x3D;&quot;+e);</span><br><span class="line">    return  &quot;我是返回值&quot;;</span><br><span class="line">&#125;</span><br><span class="line">let pp&#x3D;f();</span><br><span class="line">pp.next(&quot;我是传值a&quot;);</span><br><span class="line">pp.next(&quot;我是传值b&quot;);</span><br><span class="line">pp.next(&quot;我是传值c&quot;);</span><br><span class="line">pp.next(&quot;我是传值d&quot;);</span><br><span class="line">pp.next(&quot;我是传值e&quot;);</span><br><span class="line">console.log(pp.next(&quot;我是传值return&quot;));</span><br></pre></td></tr></table></figure>
+
+<h2 id="十四、Promise对象"><a href="#十四、Promise对象" class="headerlink" title="十四、Promise对象"></a>十四、Promise对象</h2><h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p>Promise对象，异步编程的一种解决方案。也称之为一个容器，里面保存着某个未来才会结束的事件（异步操作）的结果。在语法上，其从它可以获取异步操作的消息。</p>
+<h3 id="状态："><a href="#状态：" class="headerlink" title="状态："></a>状态：</h3><p>pending（进行中）、fulfilled（已成功）和rejected（已失败）</p>
+<h3 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h3><p>Promise为了取代回调函数</p>
+<p>回调地狱案例:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$.get(<span class="string">&quot;http://xu.rypy.vip/type/getfirstType&quot;</span>,<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">            <span class="comment">//console.log(data);</span></span><br><span class="line">            $.post(<span class="string">&quot;http://xu.rypy.vip/type/getsecondTypeByFirsttype&quot;</span>,&#123;<span class="attr">firstId</span>:data.typelist[<span class="number">2</span>].category_id&#125;,<span class="function">(<span class="params">data2</span>)=&gt;</span>&#123;</span><br><span class="line">                <span class="comment">//console.log(data2);</span></span><br><span class="line">                $.post(<span class="string">&quot;http://xu.rypy.vip/type/getThirdTypeBySecondtype&quot;</span>,&#123;<span class="attr">secondId</span>:data2.typelist[<span class="number">0</span>].category_id&#125;,<span class="function">(<span class="params">data3</span>)=&gt;</span>&#123;</span><br><span class="line">                    <span class="comment">//console.log(data3);</span></span><br><span class="line">                    $.post(<span class="string">&quot;http://xu.rypy.vip/type/getGoodsbyThirdtype&quot;</span>,&#123;<span class="attr">thirdId</span>:data3.typelist[<span class="number">3</span>].category_id&#125;,<span class="function">(<span class="params">goodlist</span>)=&gt;</span>&#123;</span><br><span class="line">                        <span class="built_in">console</span>.log(goodlist);</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>创建Promise对象,</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">true</span>)resolve(<span class="string">&quot;成功！&quot;</span>);</span><br><span class="line">    <span class="keyword">else</span> reject(<span class="string">&quot;失败！&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取状态值的方法"><a href="#获取状态值的方法" class="headerlink" title="获取状态值的方法"></a>获取状态值的方法</h3><p>在Promise对象中如果存在设置多个状态，则哪一状态最先执行完成，哪一状态就是最终Primise的值。</p>
+<p>1、封装一个Promise对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function f() &#123;</span><br><span class="line">    return new Promise((resolve,reject)&#x3D;&gt;&#123;&#x2F;&#x2F;创建了一个Promise对象的容器</span><br><span class="line">        &#x2F;&#x2F;setTimeout方法，参数一是回调函数，参数二是延时时间，参数三是可以给参数一传值</span><br><span class="line">        &#x2F;&#x2F; setTimeout(resolve,3000,&quot;我是成功的值&quot;);</span><br><span class="line">        &#x2F;&#x2F; setTimeout(reject,1000,&quot;我是失败的值&quot;);</span><br><span class="line">        &#x2F;&#x2F;自定义一个错误</span><br><span class="line">        &#x2F;&#x2F; throw new Error(&quot;我是一个自定义错误!&quot;);</span><br><span class="line">        &#x2F;&#x2F;代码运行时错误</span><br><span class="line">        &#x2F;&#x2F; console.log(age);</span><br><span class="line">        &#x2F;&#x2F; let age&#x3D;20;</span><br><span class="line">        &#x2F;&#x2F;resolve(&quot;我是成功值的设置&quot;);</span><br><span class="line">        reject(&quot;我是失败的结果！&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2、使用then方法，获取值</p>
+<p>then方法的第一个参数（回调函数）获取Promise对象成功状态的值。</p>
+<p>then方法的第二个参数（回调函数）可以获取Promise对象失败状态的值。（不推荐使用）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f().then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;<span class="comment">//回调函数的形参就是成功的值</span></span><br><span class="line">    <span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;,<span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>3、使用catch方法, 获取失败状态的值</p>
+<p>获取Promise对象失败状态的值、也可以捕获代码中的运行时错误、也可以捕获用户自定义错误。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//形式一</span></span><br><span class="line">f().catch(<span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//形式二：推荐使用</span></span><br><span class="line">f().then(<span class="function"><span class="params">data</span>=&gt;</span><span class="built_in">console</span>.log(data)).catch(<span class="function"><span class="params">err</span>=&gt;</span><span class="built_in">console</span>.log(err.message));</span><br></pre></td></tr></table></figure>
+
+<p>注：then()方法和catch()方法都可以单独出现</p>
+<p>4、使用finally方法,执行永久执行的语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f().then(data&#x3D;&gt;console.log(data)).catch(err&#x3D;&gt;console.log(err)).finally(()&#x3D;&gt;console.log(&quot;我是永久执行的代码&quot;));</span><br></pre></td></tr></table></figure>
+
+<h3 id="Promise对象的实例方法"><a href="#Promise对象的实例方法" class="headerlink" title="Promise对象的实例方法"></a>Promise对象的实例方法</h3><h4 id="1、Promise-all-异步操作1，异步操作2…"><a href="#1、Promise-all-异步操作1，异步操作2…" class="headerlink" title="1、Promise.all([异步操作1，异步操作2…..])"></a>1、Promise.all([异步操作1，异步操作2…..])</h4><h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><p>同时执行多个异步操作,并且返回值是一个Promise对象。</p>
+<h5 id="规则："><a href="#规则：" class="headerlink" title="规则："></a>规则：</h5><p>1、当all方法执行的异步任务全部都是成功状态，则会将成功状态的值以数组的形式返回，封装为Promise对象。</p>
+<p>2、当all方法中，存在失败状态的结果，则会返回执行最快的失败状态的结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">let p1&#x3D;Promise.resolve(&quot;我是成功一&quot;);</span><br><span class="line">let p2&#x3D;Promise.resolve(&quot;我是成功二&quot;);</span><br><span class="line">&#x2F;&#x2F; let p3&#x3D;Promise.reject(&quot;我是失败的值一&quot;);</span><br><span class="line">let p4&#x3D;new Promise((resolve,reject)&#x3D;&gt;&#123;</span><br><span class="line">    setTimeout(reject,5000,&quot;我是失败的2&quot;)</span><br><span class="line">&#125;);</span><br><span class="line">let p5&#x3D;new Promise((resolve,reject)&#x3D;&gt;&#123;</span><br><span class="line">    setTimeout(reject,3000,&quot;我是失败的3&quot;)</span><br><span class="line">&#125;);</span><br><span class="line">Promise.all([p1,p4,p5]).then(data&#x3D;&gt;console.log(data)).catch(err&#x3D;&gt;console.log(err));</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、Promise-race"><a href="#2、Promise-race" class="headerlink" title="2、Promise.race()"></a>2、Promise.race()</h4><p>同时执行多个异步操作，返回值是一个Promise对象</p>
+<p>规则：返回所有异步操作的状态结果最快的值，不区分成功还是失败</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; let p1&#x3D;Promise.resolve(&quot;我是成功一&quot;);</span><br><span class="line">let p2&#x3D;Promise.resolve(&quot;我是成功二&quot;);</span><br><span class="line">&#x2F;&#x2F; &#x2F;&#x2F; let p3&#x3D;Promise.reject(&quot;我是失败的值一&quot;);</span><br><span class="line">&#x2F;&#x2F; let p4&#x3D;new Promise((resolve,reject)&#x3D;&gt;&#123;</span><br><span class="line">&#x2F;&#x2F;     setTimeout(reject,5000,&quot;我是失败的2&quot;)</span><br><span class="line">&#x2F;&#x2F; &#125;);</span><br><span class="line">let p5&#x3D;new Promise((resolve,reject)&#x3D;&gt;&#123;</span><br><span class="line">    setTimeout(reject,3000,&quot;我是失败的3&quot;)</span><br><span class="line">&#125;);</span><br><span class="line">let p6&#x3D;new Promise((resolve,reject)&#x3D;&gt;&#123;</span><br><span class="line">    setTimeout(resolve,1000,&quot;我成功的3&quot;)</span><br><span class="line">&#125;);</span><br><span class="line">Promise.race([p5,p6]).then(data&#x3D;&gt;console.log(data)).catch(err&#x3D;&gt;console.log(err));</span><br></pre></td></tr></table></figure>
+
+<h3 id="Promise对象的链式操作"><a href="#Promise对象的链式操作" class="headerlink" title="Promise对象的链式操作"></a>Promise对象的链式操作</h3><p>then方法的链式操作返回值是一个Promise对象，且状态是成功状态。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve(<span class="string">&quot;成功的值&quot;</span>).then(<span class="function"><span class="params">data</span>=&gt;</span>&#123;</span><br><span class="line">   <span class="keyword">return</span> data+<span class="string">&quot;第一个then&quot;</span>;</span><br><span class="line">&#125;).then(<span class="function"><span class="params">data2</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//console.log(data2);</span></span><br><span class="line">    <span class="keyword">return</span> data2+<span class="string">&quot;第二个then&quot;</span>;</span><br><span class="line">&#125;).then(<span class="function"><span class="params">data3</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(data3);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>解决回调地狱问题</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$.get(<span class="string">&quot;http://xu.rypy.vip/type/getfirstType&quot;</span>).then(<span class="function"><span class="params">data</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $.post(<span class="string">&quot;http://xu.rypy.vip/type/getsecondTypeByFirsttype&quot;</span>,&#123;<span class="attr">firstId</span>:data.typelist[<span class="number">2</span>].category_id&#125;);</span><br><span class="line">        &#125;).then(<span class="function"><span class="params">data2</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $.post(<span class="string">&quot;http://xu.rypy.vip/type/getThirdTypeBySecondtype&quot;</span>,&#123;<span class="attr">secondId</span>:data2.typelist[<span class="number">0</span>].category_id&#125;);</span><br><span class="line">        &#125;).then(<span class="function"><span class="params">data3</span>=&gt;</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> $.post(<span class="string">&quot;http://xu.rypy.vip/type/getGoodsbyThirdtype&quot;</span>,&#123;<span class="attr">thirdId</span>:data3.typelist[<span class="number">3</span>].category_id&#125;);</span><br><span class="line">        &#125;).then(<span class="function"><span class="params">data4</span>=&gt;</span><span class="built_in">console</span>.log(data4));</span><br></pre></td></tr></table></figure>
+
+<h2 id="十五、async-函数"><a href="#十五、async-函数" class="headerlink" title="十五、async 函数"></a>十五、async 函数</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>async函数，本质就是Generator函数的语法糖。</p>
+<p>async函数是将 Generator函数的星号（*）替换成async，将yield替换成await。</p>
+<p>async函数返回一个Promise对象</p>
+<p>async 可以单独修饰函数，但是await不能单独出现在普通函数中。</p>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法:"></a>基本语法:</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">setTimeout</span>(resolve,<span class="number">3000</span>,<span class="string">&quot;我是Promise成功！&quot;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span>  <span class="title">f1</span>(<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="keyword">await</span> f();</span><br><span class="line">    <span class="built_in">console</span>.log(a);</span><br><span class="line">&#125;</span><br><span class="line">f1();</span><br></pre></td></tr></table></figure>
+
+<h3 id="async函数的返回值"><a href="#async函数的返回值" class="headerlink" title="async函数的返回值"></a>async函数的返回值</h3><p>默认返回一个Promise对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function f() &#123;</span><br><span class="line">        return new Promise(resolve&#x3D;&gt;&#123;</span><br><span class="line">            setTimeout(resolve,3000,&quot;我是Promise成功！&quot;);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    async function  f1(params) &#123;</span><br><span class="line">        let a &#x3D; await f();</span><br><span class="line">        &#x2F;&#x2F;console.log(a);</span><br><span class="line">        return &quot;我是async函数的返回值&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(f1());</span><br></pre></td></tr></table></figure>
+
+<h3 id="获取成功或失败的值"><a href="#获取成功或失败的值" class="headerlink" title="获取成功或失败的值"></a>获取成功或失败的值</h3><p>async函数中的关键词await只能获取成功状态的值，如果需要获取失败状态的值，可以采用捕获。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">async function  f() &#123;</span><br><span class="line">    let p&#x3D;await Promise.resolve(&quot;我是Promise成功的值&quot;);</span><br><span class="line">    console.log(p);</span><br><span class="line">    let p1&#x3D;await Promise.reject(&quot;我是失败的值&quot;);</span><br><span class="line">&#125;</span><br><span class="line">f().catch(err&#x3D;&gt;&#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="async函数处理失败状态的方式"><a href="#async函数处理失败状态的方式" class="headerlink" title="async函数处理失败状态的方式"></a>async函数处理失败状态的方式</h3><h4 id="局部捕获"><a href="#局部捕获" class="headerlink" title="局部捕获"></a>局部捕获</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">async function f()&#123;</span><br><span class="line">    let a&#x3D;await Promise.resolve(&quot;我是成功1&quot;);</span><br><span class="line">    console.log(a);</span><br><span class="line">    let b&#x3D;await Promise.resolve(&quot;我是成功2&quot;);</span><br><span class="line">    console.log(b);</span><br><span class="line">    let c&#x3D;await Promise.reject(&quot;我是失败的值&quot;).catch(err&#x3D;&gt;console.log(err));</span><br><span class="line">    return &quot;我是返回值&quot;;</span><br><span class="line">&#125;</span><br><span class="line">f().then(data&#x3D;&gt;console.log(data));</span><br></pre></td></tr></table></figure>
+
+<h4 id="代码块方式"><a href="#代码块方式" class="headerlink" title="代码块方式"></a>代码块方式</h4><h5 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">try&#123; </span><br><span class="line">   console.log(a);</span><br><span class="line">   let a&#x3D;20; </span><br><span class="line">&#125;catch(err)&#123;&#x2F;&#x2F;原始ES6的语法</span><br><span class="line">    console.log(err.message);</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F; catch&#123;&#x2F;&#x2F;ES2020的语法</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; &#125;finally&#123;</span><br><span class="line">&#x2F;&#x2F;     console.log(&quot;我是永久执行的块&quot;);</span><br><span class="line">&#x2F;&#x2F; &#125;</span><br><span class="line">console.log(&quot;aaaaaa&quot;);</span><br></pre></td></tr></table></figure>
+
+<h5 id="代码块处理失败状态"><a href="#代码块处理失败状态" class="headerlink" title="代码块处理失败状态"></a>代码块处理失败状态</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">async function f() &#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        let p1&#x3D;await Promise.reject(&quot;dddd&quot;);</span><br><span class="line">        &#x2F;&#x2F;异常，错误</span><br><span class="line">    &#125;catch(e)&#123;</span><br><span class="line">        console.log(e);</span><br><span class="line">    &#125;</span><br><span class="line">    console.log(&quot;ssssss&quot;);</span><br><span class="line">&#125;</span><br><span class="line">f()</span><br></pre></td></tr></table></figure>
+
+<h4 id="优雅的方式处理"><a href="#优雅的方式处理" class="headerlink" title="优雅的方式处理"></a>优雅的方式处理</h4><p>//方式三 优雅的处理async函数的错误。<br>思路：异常或错误的处理方式进行封装为to方法，此方法需要一个参数，参数是Promise对象类型,注：此方法规定了返回值类型为数组。<br>此方法对应有一个插件 await-to-js<br>注：优雅的处理async函数中的错误，如果是Promise对象容器中代码的错误，需要局部捕获或块级捕获</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function to(p)&#123;</span><br><span class="line">    return p.then(data&#x3D;&gt;[null,data]).catch(err&#x3D;&gt;[err,null]);</span><br><span class="line">&#125;</span><br><span class="line">async function f() &#123;</span><br><span class="line">    let [err1,data1]&#x3D;await to(Promise.resolve(&quot;我是成功！！&quot;));</span><br><span class="line">    console.log(data1);</span><br><span class="line">    let [err2,data2]&#x3D;await to(Promise.reject(&quot;我是失败!&quot;));</span><br><span class="line">    console.log(err2);</span><br><span class="line">    console.log(&quot;sdfsdfsd&quot;);</span><br><span class="line">&#125;</span><br><span class="line">f();</span><br></pre></td></tr></table></figure>
+
+<h2 id="十六、ES6中的面向对象"><a href="#十六、ES6中的面向对象" class="headerlink" title="十六、ES6中的面向对象"></a>十六、ES6中的面向对象</h2><h3 id="类的定义"><a href="#类的定义" class="headerlink" title="类的定义"></a>类的定义</h3><p>语法：class 类名 {}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;定义类，关键词class</span><br><span class="line">class Furist&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;类的使用(类的实例化)，关键词new</span><br><span class="line">let f&#x3D;new Furist();&#x2F;&#x2F;f叫做类的引用</span><br></pre></td></tr></table></figure>
+
+<h3 id="类中的结构"><a href="#类中的结构" class="headerlink" title="类中的结构"></a>类中的结构</h3><p>类中可以定义方法（函数），也可以定义属性。</p>
+<h4 id="类的方法"><a href="#类的方法" class="headerlink" title="类的方法"></a>类的方法</h4><p>类中的方法包含3类，构造方法、成员方法、静态方法</p>
+<h5 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h5><p>关键词constructor </p>
+<p>语法：constructor(){}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Fruit&#123;</span><br><span class="line">    constructor()&#123;&#x2F;&#x2F;类的构造方法</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a>成员方法</h5><p>即一般普通的方法,</p>
+<p>语法：方法名(参数){ }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Fruit&#123;</span><br><span class="line">    aa(params) &#123;&#125;</span><br><span class="line">    bb()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h5><p>语法：static 方法名(参数){}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Fruit&#123;</span><br><span class="line">    static aa(params) &#123;&#125;</span><br><span class="line">    static bb()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="类方法的使用"><a href="#类方法的使用" class="headerlink" title="类方法的使用"></a>类方法的使用</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Friut&#123;</span><br><span class="line">    constructor(str)&#123;</span><br><span class="line">        console.log(&quot;我是构造方法！&quot;+str);</span><br><span class="line">    &#125;</span><br><span class="line">    aa()&#123;</span><br><span class="line">        console.log(&quot;我是成员方法！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static bb()&#123;</span><br><span class="line">        console.log(&quot;我是静态方法！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;如果需要使用类，必须要先创建类的实例。</span><br><span class="line">let f&#x3D;new Friut();&#x2F;&#x2F;创建了一个Friut类的实例</span><br><span class="line">&#x2F;&#x2F;构造方法，在创建类的实例的时候被调用。</span><br><span class="line">let f1&#x3D;new Friut(&quot;我是憨憨&quot;);</span><br><span class="line">&#x2F;&#x2F;上面new的变量名，专业术语叫 类的引用。</span><br><span class="line">&#x2F;&#x2F;成员方法只能使用引用来调用</span><br><span class="line">f.aa();</span><br><span class="line">&#x2F;&#x2F;静态方法只能使用类名来调用</span><br><span class="line">Friut.bb();</span><br><span class="line">Friut.aa();</span><br></pre></td></tr></table></figure>
+
+<h4 id="类的属性"><a href="#类的属性" class="headerlink" title="类的属性"></a>类的属性</h4><p>类中的属性的分类 2类，成员属性，静态属性。</p>
+<h5 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h5><p>语法：属性名即可,可以在成员方法/构造方法中使用 this.属性名 </p>
+<p>注：如果在成员方法中定义的成员属性，需要调用成员方法才可以赋值。如果是静态方法中定义的属性，也需要调用静态方法才可以赋值。</p>
+<h5 id="静态属性"><a href="#静态属性" class="headerlink" title="静态属性"></a>静态属性</h5><p>语法：在静态方法中使用 this.属性名 ,也可以在类中使用关键词 static 属性名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class User&#123;</span><br><span class="line">	interest&#x3D;&quot;haha&quot;;</span><br><span class="line">    static  username&#x3D;&quot;rypy&quot;;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">    	this.username&#x3D;&quot;rypy1&quot;；</span><br><span class="line">    &#125;</span><br><span class="line">    getPwd()&#123;</span><br><span class="line">    	this.pwd&#x3D;&quot;123456&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    static getSex()&#123;</span><br><span class="line">        this.sex&#x3D;&quot;男&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">console.log(User.username);</span><br><span class="line">User.getSex();</span><br><span class="line">console.log(User.sex);</span><br></pre></td></tr></table></figure>
+
+<h3 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h3><p>类的继承 关键词 extends,语法：子类 extends 父类</p>
+<p><strong>注：</strong>ES6中类的继承，子类是完全继承父类的全部。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class Father&#123;</span><br><span class="line">    firstName&#x3D;&quot;A&quot;;</span><br><span class="line">    static secondName&#x3D;&quot;F&quot;;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        console.log(&quot;父类的构造方法&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    getFirstName()&#123;</span><br><span class="line">        return this.firstName;</span><br><span class="line">    &#125;</span><br><span class="line">    static getSecondName()&#123;</span><br><span class="line">        return this.secondName;</span><br><span class="line">    &#125;</span><br><span class="line">    smoking()&#123;</span><br><span class="line">        console.log(&quot;我吸烟&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Son extends Father&#123;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        super();&#x2F;&#x2F;调用父类的构造方法</span><br><span class="line">        console.log(&quot;我是子类的构造方法&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    smoking()&#123;&#x2F;&#x2F;类的多态</span><br><span class="line">        super.smoking();&#x2F;&#x2F;super.方法名可以调用父类的方法。</span><br><span class="line">        console.log(&quot;我不吸烟&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    getFirstName()&#123;</span><br><span class="line">        return&#123;firstName:this.firstName&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let son&#x3D;new Son();</span><br><span class="line">&#x2F;&#x2F; console.log(son.firstName);</span><br><span class="line">&#x2F;&#x2F; console.log(Son.secondName);</span><br><span class="line">&#x2F;&#x2F; console.log(son.getFirstName());</span><br><span class="line">&#x2F;&#x2F; console.log(Son.getSecondName());</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; son.smoking();</span><br><span class="line">console.log(son.getFirstName());</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; let father&#x3D;new Father();</span><br><span class="line">&#x2F;&#x2F; father.smoking();</span><br></pre></td></tr></table></figure>
+
+<h3 id="super和this关键词"><a href="#super和this关键词" class="headerlink" title="super和this关键词"></a>super和this关键词</h3><p>super关键词，用在子类中，指向父类的实例,且只能调用父类的方法（构造方法super(),是调用父类的构造方法。成员方法中，只能调用父类的成员方法，静态方法中，只能调用父类的静态方法）</p>
+<p>this关键词，指向当前类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Father&#123;</span><br><span class="line">    firstName&#x3D;&quot;A&quot;;</span><br><span class="line">    static secondName&#x3D;&quot;F&quot;;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        console.log(&quot;父类的构造方法&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    getFirstName()&#123;</span><br><span class="line">        return this.firstName;</span><br><span class="line">    &#125;</span><br><span class="line">    static getSecondName()&#123;</span><br><span class="line">        return this.secondName;</span><br><span class="line">    &#125;</span><br><span class="line">    smoking()&#123;</span><br><span class="line">        console.log(&quot;我吸烟&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static drinking()&#123;</span><br><span class="line">        console.log(&quot;我喝酒&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Son extends Father&#123;</span><br><span class="line">    &#x2F;&#x2F; constructor()&#123;</span><br><span class="line">    &#x2F;&#x2F;     super();</span><br><span class="line">    &#x2F;&#x2F; &#125;</span><br><span class="line">    smoking()&#123;</span><br><span class="line">        super.smoking();</span><br><span class="line">        console.log(&quot;子类打印&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static drinking()&#123;</span><br><span class="line">        super.drinking();</span><br><span class="line">        this.drinking();</span><br><span class="line">        console.log(&quot;我不喝酒&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static drinking2()&#123;</span><br><span class="line">        console.log(&quot;haha&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let son&#x3D;new Son();</span><br><span class="line">&#x2F;&#x2F; son.smoking();</span><br><span class="line">Son.drinking();</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Dou Gengxin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%89)/">http://example.com/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%89)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/ES6/"># ES6</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%BA%8C)/">ES6详细基础(二)</a>
+            
+            
+            <a class="next" rel="next" href="/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%80)/">ES6详细基础(四)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Dou Gengxin | E-mail:1365188369@qq.com
+    </div>
+</footer>
+
+    </div>
+    
+    
+    <div class="GalMenu GalDropDown">
+       <div class="circle" id="gal">
+         <div class="ring">
+           <a href="/" class="menuItem">首页</a>
+           <a href="javascript:history.go(1);" class="menuItem">前进</a>
+           <a href="javascript:$('html,body').animate({scrollTop:0},500);" class="menuItem">顶部</a>
+           <a href="javascript:location.reload();" class="menuItem">刷新</a>
+           <a href="javascript:history.go(-1);" class="menuItem">后退</a>
+         </div>
+         
+             <audio id="audio" src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/audio/niconiconi.mp3"></audio>
+         
+       </div>
+ </div>
+ <script type="text/javascript">
+ var items = document.querySelectorAll('.menuItem'); 
+ for (var i = 0, l = items.length; i < l; i++) {
+     items[i].style.left = (50 - 35 * Math.cos( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%";
+     items[i].style.top = (50 + 35 * Math.sin( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%"
+   }
+ </script>
+ <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/jquery-2.1.1.min.js"><\/script>')</script>	
+ 
+<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/GalMenu.js"></script>
+
+ <script type="text/javascript">
+     $(document).ready(function() {
+     $('body').GalMenu({
+       'menu': 'GalDropDown'
+     })
+   });
+ </script>
+
+
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<!--崩溃欺骗-->
+<script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

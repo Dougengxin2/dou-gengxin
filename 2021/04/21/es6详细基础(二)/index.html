@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/css/GalMenu.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Dou Gengxin">
+
+
+
+
+
+<title>ES6详细基础(二) | 代码时代</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">我的主页</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">我的主页</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ES6详细基础(二)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Dou Gengxin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 21, 2021&nbsp;&nbsp;14:40:40</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/es6/">es6</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="八、函数扩展"><a href="#八、函数扩展" class="headerlink" title="八、函数扩展"></a>八、函数扩展</h2><h3 id="8-1-箭头函数"><a href="#8-1-箭头函数" class="headerlink" title="8.1 箭头函数"></a>8.1 箭头函数</h3><h4 id="8-1-1概念："><a href="#8-1-1概念：" class="headerlink" title="8.1.1概念："></a>8.1.1概念：</h4><p>ES6允许用箭头（=&gt;）声明函数。()=&gt;{}等价于function (){}，用箭头声明的函数称之为箭头函数。</p>
+<h4 id="8-1-2-箭头函数的参数"><a href="#8-1-2-箭头函数的参数" class="headerlink" title="8.1.2 箭头函数的参数"></a>8.1.2 箭头函数的参数</h4><h5 id="1-无参数"><a href="#1-无参数" class="headerlink" title="1. 无参数"></a>1. 无参数</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;() &#x3D;&gt; &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-有参数"><a href="#2-有参数" class="headerlink" title="2.有参数"></a>2.有参数</h5><h6 id="一个参数的形式"><a href="#一个参数的形式" class="headerlink" title="一个参数的形式"></a>一个参数的形式</h6><p><strong>规则：</strong></p>
+<p>箭头函数中有且只有一个参数的时候，()可以省略。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; let c&#x3D;m&#x3D;&gt;&#123;&#125;;&#x2F;&#x2F;等同于let c&#x3D;(m)&#x3D;&gt;&#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<h6 id="多个参数"><a href="#多个参数" class="headerlink" title="多个参数"></a>多个参数</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;(m,n)&#x3D;&gt;&#123;console.log(m*n);&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-1-3-箭头函数的方法体"><a href="#8-1-3-箭头函数的方法体" class="headerlink" title="8.1.3 箭头函数的方法体"></a>8.1.3 箭头函数的方法体</h4><h5 id="1-一条语句："><a href="#1-一条语句：" class="headerlink" title="1.一条语句："></a>1.一条语句：</h5><p>当箭头函数的方法体内有且只有一条语句的时候，{}可以省略。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let b&#x3D;m&#x3D;&gt;console.log(m);</span><br><span class="line">b(39);</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-return返回值："><a href="#2-return返回值：" class="headerlink" title="2.return返回值："></a>2.return返回值：</h5><p>当箭头函数的方法体内有且只有一条语句的时候，且是return 关键词的时候，{}，return都可以省略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let b&#x3D;(m,n)&#x3D;&gt;&#123;return m+n&#125;;</span><br><span class="line">let c&#x3D;(m,n)&#x3D;&gt;m*n;</span><br><span class="line">console.log(b(3,4));</span><br><span class="line">console.log(c(3,4));</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-1-4-箭头函数中的this与普通函数中的this的对比"><a href="#8-1-4-箭头函数中的this与普通函数中的this的对比" class="headerlink" title="8.1.4 箭头函数中的this与普通函数中的this的对比"></a>8.1.4 箭头函数中的this与普通函数中的this的对比</h4><h5 id="1-全局中的this"><a href="#1-全局中的this" class="headerlink" title="1.全局中的this"></a>1.全局中的this</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;function()&#123;</span><br><span class="line">    console.log(this);&#x2F;&#x2F;window</span><br><span class="line">&#125;</span><br><span class="line">let b&#x3D;()&#x3D;&gt;&#123;</span><br><span class="line">    console.log(this);&#x2F;&#x2F;window</span><br><span class="line">&#125;</span><br><span class="line">a();</span><br><span class="line">b();</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-事件中的this"><a href="#2-事件中的this" class="headerlink" title="2.事件中的this"></a>2.事件中的this</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;button id&#x3D;&quot;btn1&quot;&gt;按钮一&lt;&#x2F;button&gt;</span><br><span class="line">  &lt;button id&#x3D;&quot;btn2&quot;&gt;按钮二&lt;&#x2F;button&gt;</span><br><span class="line">  &lt;script&gt;</span><br><span class="line">      document.getElementById(&quot;btn1&quot;).onclick&#x3D;function()&#123;</span><br><span class="line">          console.log(this);&#x2F;&#x2F;button</span><br><span class="line">      &#125;</span><br><span class="line">      document.getElementById(&quot;btn2&quot;).onclick&#x3D;()&#x3D;&gt;&#123;</span><br><span class="line">          console.log(this);&#x2F;&#x2F;window</span><br><span class="line">      &#125;</span><br><span class="line">  &lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-对象中方法的返回值的this指向"><a href="#3-对象中方法的返回值的this指向" class="headerlink" title="3.对象中方法的返回值的this指向"></a>3.对象中方法的返回值的this指向</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">  function person()&#123;</span><br><span class="line">    this.a&#x3D;function()&#123;</span><br><span class="line">        return function()&#123;</span><br><span class="line">            console.log(this);&#x2F;&#x2F;window</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p1&#x3D;new person();</span><br><span class="line">&#x2F;&#x2F; console.log(p1.a());</span><br><span class="line">p1.a()();</span><br><span class="line">function person2()&#123;</span><br><span class="line">    this.b&#x3D;function()&#123;</span><br><span class="line">        return ()&#x3D;&gt;&#123;</span><br><span class="line">            console.log(this);&#x2F;&#x2F;person2</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p2&#x3D;new person2();</span><br><span class="line">p2.b()();</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：</strong>箭头函数中的this,是谁定义了箭头函数，this就指向谁。</p>
+<h4 id="8-1-5-箭头函数使用的注意事项"><a href="#8-1-5-箭头函数使用的注意事项" class="headerlink" title="8.1.5 箭头函数使用的注意事项"></a>8.1.5 箭头函数使用的注意事项</h4><p>1.箭头函数中的this,是谁定义指向谁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function P()&#123;</span><br><span class="line">    this.a&#x3D;function()&#123;</span><br><span class="line">        console.log(this);&#x2F;&#x2F;P</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let p&#x3D;new P();</span><br><span class="line">p.a();</span><br></pre></td></tr></table></figure>
+
+<p>2.箭头函数不能当构造函数来使用，即不能使用new来创建对象的实例，否则会抛出错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;()&#x3D;&gt;&#123;</span><br><span class="line">    console.log(&quot;aaaa&quot;);</span><br><span class="line">&#125;</span><br><span class="line">let a1&#x3D;new a();  &#x2F;&#x2F;报错，不是构造函数</span><br></pre></td></tr></table></figure>
+
+<p>3.箭头函数中不能使用arguments,可以使用剩余参数运算符rest来代替arguments</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;(m,n,f,d)&#x3D;&gt;&#123;</span><br><span class="line">     console.log(arguments);</span><br><span class="line"> &#125;</span><br><span class="line"> a(1,2,3,4);</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-函数形参的默认值"><a href="#8-2-函数形参的默认值" class="headerlink" title="8.2 函数形参的默认值"></a>8.2 函数形参的默认值</h3><p>函数形参的默认值：指在函数参数的传递过程中给函数的形参添加一个默认值,如果当函数即有形参默认值，又有实参，实参会覆盖形参的默认值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function f(username&#x3D;&quot;admin&quot;,pwd&#x3D;&quot;123456&quot;)&#123;</span><br><span class="line">    return &#96;姓名：$&#123;username&#125;密码：$&#123;pwd&#125;&#96;;</span><br><span class="line">&#125;</span><br><span class="line">console.log(f(&quot;rypy&quot;));</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-函数的常用方法"><a href="#8-3-函数的常用方法" class="headerlink" title="8.3 函数的常用方法"></a>8.3 函数的常用方法</h3><p><strong>函数名.bind(对象,函数的参数)</strong></p>
+<p>函数的引用.bind()，将函数中this指向绑定给对象,参数一是需要绑定的对象引用，参数二……..参数n,可以给函数传递参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function f(username,pwd)&#123;</span><br><span class="line">    this.username&#x3D;username;</span><br><span class="line">    this.pwd&#x3D;pwd;</span><br><span class="line">&#125;</span><br><span class="line">let obj&#x3D;&#123;username:&quot;admin&quot;,sex:&quot;男&quot;&#125;;&#x2F;&#x2F;当对象中如果含有同键名的键值对，那么绑定之后，同名的值会被覆盖。</span><br><span class="line">f.bind(obj,&quot;rypy&quot;,11233)();&#x2F;&#x2F;bind本身是个函数，所以调用的时候需要加（），且f本身也是一个函数，所以调用的时候()</span><br><span class="line">f.bind(obj)(&quot;rypy&quot;,123456);</span><br><span class="line">f.bind(obj,&quot;rypy2&quot;,12345,&quot;&quot;)(&quot;rypy1&quot;);&#x2F;&#x2F;注：bind传递给函数的参数优先级会高于本身调用传递的参数。</span><br><span class="line">console.log(obj);</span><br></pre></td></tr></table></figure>
+
+<h2 id="九、ES6中的运算符"><a href="#九、ES6中的运算符" class="headerlink" title="九、ES6中的运算符"></a>九、ES6中的运算符</h2><p>关键词  …</p>
+<p>ES6的运算符分类，分为两类：剩余参数运算符rest 和 扩展运算符spread。</p>
+<h3 id="9-1-剩余参数运算符-rest："><a href="#9-1-剩余参数运算符-rest：" class="headerlink" title="9.1 剩余参数运算符 rest："></a>9.1 剩余参数运算符 rest：</h3><p>通常使用在形参,将参数序列转化为数组。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function f(b,...a)&#123;</span><br><span class="line">    console.log(a);</span><br><span class="line">    console.log(b);</span><br><span class="line">&#125;</span><br><span class="line">f(1,&quot;aaa&quot;,true,false,&quot;bbb&quot;,&quot;ccc&quot;,&quot;eee&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>注：剩余参数运算符，必须放在形参的最后面。否则会报错！</p>
+<p><strong>用途：</strong></p>
+<p>通常不确定在调用方法的时候传递的参数的个数，此时形参可以采用剩余参数运算符。</p>
+<h3 id="9-2-扩展运算符spread"><a href="#9-2-扩展运算符spread" class="headerlink" title="9.2 扩展运算符spread"></a>9.2 扩展运算符spread</h3><p>通常使用在实参，将数组类型的参数，转换为序列传递给函数（即打散操作）。相当于剩余参数运算符的逆运算。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function f(a,b,c,d,e,f)&#123;</span><br><span class="line">    console.log(c);</span><br><span class="line">    console.log(d);</span><br><span class="line">&#125;</span><br><span class="line">let arr&#x3D;[1,2,4,6,8,3,6,8,4,10,7,9];</span><br><span class="line">f(...arr)</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-3-ES6中运算符的应用场景"><a href="#9-3-ES6中运算符的应用场景" class="headerlink" title="9.3 ES6中运算符的应用场景"></a>9.3 ES6中运算符的应用场景</h3><h4 id="1、复制数组或对象"><a href="#1、复制数组或对象" class="headerlink" title="1、复制数组或对象"></a>1、复制数组或对象</h4><p>当数组或对象中的元素是数值，字符串，布尔类型的时候，其元素是深拷贝,如果数组或对象中的元素是复合类型的时候，嵌套类型是存的地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let arr&#x3D;[1,2,4,6,8,3,6,8,4,10,7,9];</span><br><span class="line">let newArr&#x3D;[...arr];</span><br><span class="line">arr[5]&#x3D;&quot;aaaaaa&quot;;</span><br><span class="line">console.log(arr);</span><br><span class="line">console.log(newArr);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、合并数组或对象"><a href="#2、合并数组或对象" class="headerlink" title="2、合并数组或对象"></a>2、合并数组或对象</h4><p>对象的合并会覆盖重名键值对，但数组的合并不会去重。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let arr1&#x3D;[1,2,4,6,3,5,7];</span><br><span class="line">let arr2&#x3D;[2,3,5,2,5,6,8];</span><br><span class="line">console.log([...arr1,...arr2]);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、将数组转化为对象"><a href="#3、将数组转化为对象" class="headerlink" title="3、将数组转化为对象"></a>3、将数组转化为对象</h4><p>可以将数组类型的数据打散并且转换为对象，对象的键名为数组的下标，对象的值为数组的元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let arr &#x3D;[1,2,4,6,3,5,7];</span><br><span class="line">console.log(&#123;...arr&#125;);    </span><br></pre></td></tr></table></figure>
+
+<h2 id="十、-ES6中的数据结构"><a href="#十、-ES6中的数据结构" class="headerlink" title="十、 ES6中的数据结构"></a>十、 ES6中的数据结构</h2><p>ES6中新增加的数据结构分为两类，Set数据结构和Map数据结构。</p>
+<h3 id="10-1-Set数据结构"><a href="#10-1-Set数据结构" class="headerlink" title="10.1 Set数据结构"></a>10.1 Set数据结构</h3><p>类数组，自带去重光环,可以存储任意类型。</p>
+<p>创建Set数据结构实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let set &#x3D;new Set([1,2,5,6,4,4,2,4,2,5,6]);</span><br></pre></td></tr></table></figure>
+
+<p>1、引用.add(),向Set数据结构 添加数据/元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set.add(&quot;adsdfad&quot;);</span><br><span class="line">set.add(&quot;adsdfad&quot;);</span><br><span class="line">set.add(true);</span><br><span class="line">set.add(function f()&#123;console.log(&quot;我是函数&quot;);&#125;);</span><br><span class="line">console.log(set);</span><br></pre></td></tr></table></figure>
+
+<p>2、引用.delete(),删除Set数据结构中的元素</p>
+<p>Set数据结构可以存储任意类型，但只能删除基本类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set.delete(1);</span><br><span class="line">console.log(set);</span><br></pre></td></tr></table></figure>
+
+<p>3、引用.clear(),清空Set数据结构中的元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set.clear();</span><br><span class="line">console.log(set);</span><br></pre></td></tr></table></figure>
+
+<p>4、引用.has(元素)，判断Set数据结构中是否含有该元素(只能判定基本类型),返回值是布尔类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(set.has(2));</span><br></pre></td></tr></table></figure>
+
+<p>5、引用.forEach(),循环输出Set数据结构中的元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set.forEach(item&#x3D;&gt;&#123;</span><br><span class="line">    &#x2F;&#x2F; console.log(typeof item);</span><br><span class="line">    if(typeof item &#x3D;&#x3D;&#x3D;&quot;function&quot;)&#123;</span><br><span class="line">        item();</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; console.log(item);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>6、引用.size,获取当前Set数据结构中元素的个数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(set.size);</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-Map数据结构"><a href="#10-2-Map数据结构" class="headerlink" title="10.2 Map数据结构"></a>10.2 Map数据结构</h3><p>类似对象，存储的形式是键值对的形式。与对象的区别在于，键名和键值可以是任意类型。</p>
+<p>创建Map数据结构实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let map&#x3D;new Map();</span><br></pre></td></tr></table></figure>
+
+<p>1、引用.set(键名，键值) ,向Map数据结构中添加键值对。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">map.set(&quot;username&quot;,&quot;admin&quot;);</span><br><span class="line">map.set(true,&quot;aaaaa&quot;);</span><br><span class="line">map.set(1,&quot;sdfsdfsdfsd&quot;);</span><br><span class="line">map.set(()&#x3D;&gt;&#123;console.log(&quot;sssss&quot;);&#125;,34534534534534);</span><br><span class="line">console.log(map);</span><br></pre></td></tr></table></figure>
+
+<p>2、引用.get(键名)，通过键名获取对应键值，键名只能是基本类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log(map.get(1));</span><br><span class="line">console.log(map.get(()&#x3D;&gt;&#123;console.log(&quot;sssss&quot;);&#125;));&#x2F;&#x2F;注：虽然键名可以是任意类型，但复合类型的键名无法获取值。</span><br></pre></td></tr></table></figure>
+
+<p>3、引用.delete(键名)，删除Map数据结构中的对应键值对。键名只能是基本类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log(map.delete(2));</span><br><span class="line">console.log(map);</span><br></pre></td></tr></table></figure>
+
+<p> 4、引用.clear(),清除Map数据结构中的所有键值对</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">map.clear();</span><br><span class="line">console.log(map);</span><br></pre></td></tr></table></figure>
+
+<p>5、引用.has(键名)，判断当前Map数据结构中是否含有与参数一致的键名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(map.has(6));</span><br></pre></td></tr></table></figure>
+
+<p>6、引用.forEach(),循环遍历Map数据结构中的键值对，回调函数参数一是键值，回调函数参数二是键名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">map.forEach((item,index)&#x3D;&gt;&#123;</span><br><span class="line">    if(typeof index &#x3D;&#x3D;&#x3D;&quot;function&quot;)index();</span><br><span class="line">    &#x2F;&#x2F;console.log(index);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>7、引用.size,获取当前Map数据结构的键值对个数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(map.size);</span><br></pre></td></tr></table></figure>
+
+<h2 id="十一、Symbol运算符"><a href="#十一、Symbol运算符" class="headerlink" title="十一、Symbol运算符"></a>十一、Symbol运算符</h2><h3 id="11-1-概念"><a href="#11-1-概念" class="headerlink" title="11.1 概念"></a>11.1 概念</h3><p>基本数据类型：String、Number、undefined、Boolean、null、Symbol</p>
+<p>数据类型：String、Number、undefined、Boolean、null、Object、Symbol、Array、Function</p>
+<p>Symbol概念：利用Symbol函数，每次生成一个独一无二的值。可以解决变量/对象属性覆盖问题。</p>
+<h3 id="11-2-使用"><a href="#11-2-使用" class="headerlink" title="11.2 使用"></a>11.2 使用</h3><p>每调用一次Symbol()函数，都会随机生成一个Hash值，那么这样就会导致下面的a和b的值是不一样。</p>
+<h4 id="1、创建无参的Symbol-类型"><a href="#1、创建无参的Symbol-类型" class="headerlink" title="1、创建无参的Symbol()类型"></a>1、创建无参的Symbol()类型</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;Symbol();</span><br><span class="line">let b&#x3D;Symbol();</span><br><span class="line">console.log(a&#x3D;&#x3D;b);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、创建一个有参的Symbol-类型"><a href="#2、创建一个有参的Symbol-类型" class="headerlink" title="2、创建一个有参的Symbol()类型"></a>2、创建一个有参的Symbol()类型</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;Symbol(&quot;aaaa&quot;);</span><br><span class="line">let b&#x3D;Symbol(&quot;aaaa&quot;);</span><br><span class="line">console.log(a&#x3D;&#x3D;b);</span><br></pre></td></tr></table></figure>
+
+<p><strong>注：</strong>Symbol函数的参数，又称为Symbol的标识符，为了区分两个Symbol的含义，也可看做是注释。</p>
+<h4 id="3、创建相等的Symbol类型"><a href="#3、创建相等的Symbol类型" class="headerlink" title="3、创建相等的Symbol类型"></a>3、创建相等的Symbol类型</h4><p>如果需要将两个Symbol类型的数据相等，必须采用Symbol.for()方法,且参数必须相同，此时生成的Symbol类型是同一个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;Symbol.for(&quot;aaaa&quot;);</span><br><span class="line">let b&#x3D;Symbol.for(&quot;aaaa&quot;);</span><br><span class="line">console.log(a&#x3D;&#x3D;b);    </span><br></pre></td></tr></table></figure>
+
+<h4 id="4、Symbol类型的应用"><a href="#4、Symbol类型的应用" class="headerlink" title="4、Symbol类型的应用"></a>4、Symbol类型的应用</h4><h5 id="4-1-Symbol类型作为属性名和方法名"><a href="#4-1-Symbol类型作为属性名和方法名" class="headerlink" title="4.1 Symbol类型作为属性名和方法名"></a>4.1 Symbol类型作为属性名和方法名</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;Symbol(&quot;属性名&quot;);</span><br><span class="line">let b&#x3D;Symbol(&quot;方法名&quot;);</span><br><span class="line">let obj&#x3D;&#123;</span><br><span class="line">    [a]:&quot;asdfsdfsd&quot;,&#x2F;&#x2F;定义一个Symbol类型的属性</span><br><span class="line">    [b]()&#123;&#x2F;&#x2F;定义一个Symbol类型的方法</span><br><span class="line">        console.log(&quot;aaaa&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><h5 id="2-Symbol类型模拟私有属性或方法"><a href="#2-Symbol类型模拟私有属性或方法" class="headerlink" title="2 Symbol类型模拟私有属性或方法"></a>2 Symbol类型模拟私有属性或方法</h5></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function person()&#123;&#x2F;&#x2F;面向过程对象</span><br><span class="line">                   let a&#x3D;Symbol();</span><br><span class="line">                   let b&#x3D;&quot;hello&quot;;</span><br><span class="line">                   this.aa&#x3D;()&#x3D;&gt;&#123;&#x2F;&#x2F;定义对象（面向对象过程）中的方法</span><br><span class="line">                       this[a](); </span><br><span class="line">                       console.log(&quot;我是方法aa&quot;);</span><br><span class="line">                   &#125;</span><br><span class="line">                   this[a]&#x3D;()&#x3D;&gt;&#123;</span><br><span class="line">                       console.log(&quot;我是Symbol类型的方法&quot;);</span><br><span class="line">                   &#125;</span><br><span class="line">                   &#x2F;&#x2F;Symbol()&#123;console.log(&quot;我是Symbol类型的方法&quot;);&#125;</span><br><span class="line">                   this[b]&#x3D;()&#x3D;&gt;&#123;</span><br><span class="line">                        this[a](); </span><br><span class="line">                       console.log(&quot;我是变量运算符的方法&quot;);</span><br><span class="line">                   &#125;</span><br><span class="line">                   &#x2F;&#x2F;hello()&#123;console.log(&quot;我是变量运算符的方法&quot;);&#125;</span><br><span class="line">               &#125;</span><br><span class="line">               let p&#x3D;new person();</span><br><span class="line">            &#x2F;&#x2F;    p.aa();</span><br><span class="line">               p[&quot;hello&quot;]();</span><br><span class="line">            &#x2F;&#x2F;    p.hello(); </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="十二、Iterator遍历器"><a href="#十二、Iterator遍历器" class="headerlink" title="十二、Iterator遍历器"></a>十二、Iterator遍历器</h2><h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p>Iterator，它是一种接口，也可称之为一种机制，所有<strong>数据结构</strong>只要部署了该接口，都可以进行遍历。</p>
+<h3 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h3><p>1）为各种数据结构，提供一个统一的、简便的访问接口；</p>
+<p>2）使数据结构的成员能够按某种次序排列；</p>
+<p>3）为for…of提供服务。</p>
+<p><strong>注：</strong></p>
+<p>iterator遍历器为for of 提供循环服务的时候，循环终止的条件是键名为done的值是true的时候循环终止。</p>
+<h3 id="Iterator遍历过程"><a href="#Iterator遍历过程" class="headerlink" title="Iterator遍历过程"></a>Iterator遍历过程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">let arr&#x3D;[1,2,3,4,5];</span><br><span class="line">     let it&#x3D;arr[Symbol.iterator]();&#x2F;&#x2F;将数组类型的数据结构，实现遍历器接口</span><br><span class="line">     &#x2F;&#x2F; it.next();</span><br><span class="line">     &#x2F;&#x2F; it.next();</span><br><span class="line">     &#x2F;&#x2F; it.next();</span><br><span class="line">     &#x2F;&#x2F; it.next();</span><br><span class="line">     &#x2F;&#x2F; it.next();</span><br><span class="line">     &#x2F;&#x2F; it.next();</span><br><span class="line">     &#x2F;&#x2F; console.log(it.next());</span><br><span class="line"></span><br><span class="line">     for(let item of it)&#123;&#x2F;&#x2F;可以使用for...of来实现遍历器中value的值的输出。</span><br><span class="line">         console.log(item);</span><br><span class="line">     &#125;</span><br><span class="line">     &#x2F;&#x2F;遍历器它的next(),是懒惰性原理。</span><br></pre></td></tr></table></figure>
+
+<h2 id="十三、Generator"><a href="#十三、Generator" class="headerlink" title="十三、Generator"></a>十三、Generator</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Generator 函数是 ES6 提供的一种异步编程解决方案。语法上，可以把它理解成一个状态机，封装了多个内部状态。在Generator 函数执行时会返回一个遍历器对象，可以一次遍历函数内的每一个状态。</p>
+<h3 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h3><p>星号,用来修饰函数(只能放在function关键词与函数名的中间位置)，yield 用来定义状态(异步操作)</p>
+<p>1、定义Generator函数及状态的定义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function * f()&#123;&#x2F;&#x2F;Generator函数</span><br><span class="line">    yield &quot;播放&quot;;</span><br><span class="line">    yield &quot;停止&quot;;</span><br><span class="line">    yield &quot;快进&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2、Generator函数的返回值</p>
+<p>注：Generator函数中for…of只能获取状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function * f()&#123;&#x2F;&#x2F;Generator函数</span><br><span class="line">                yield &quot;播放&quot;;</span><br><span class="line">                yield &quot;停止&quot;;</span><br><span class="line">                yield &quot;快进&quot;;</span><br><span class="line">                return &quot;我是函数返回值&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">            let p&#x3D;f();</span><br><span class="line">            &#x2F;&#x2F; p.next();</span><br><span class="line">            &#x2F;&#x2F; p.next();</span><br><span class="line">            &#x2F;&#x2F; p.next();</span><br><span class="line">            &#x2F;&#x2F; console.log(p.next()); &#x2F;&#x2F;注：与遍历器不同的是Generator函数的next()可以获取到函数的返回值。</span><br><span class="line">            for(let item of p)&#123;&#x2F;&#x2F;由于for...of是根据done的值来判断循环是否结束，因此，只会输出状态，不会输出返回值。</span><br><span class="line">                &#x2F;&#x2F;console.log(item);</span><br><span class="line">            &#125;</span><br><span class="line">            console.log(p.next());</span><br></pre></td></tr></table></figure>
+
+<p>3、Generator函数使用next方法传递参数</p>
+<p>next可以传递参数，但是给上一个状态进行传递参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function * f()&#123;&#x2F;&#x2F;Generator函数</span><br><span class="line">              console.log(&quot;ddddd&quot;);</span><br><span class="line">              let a&#x3D;yield &quot;播放&quot;;</span><br><span class="line">              console.log(a);</span><br><span class="line">              let b&#x3D;yield &quot;停止&quot;;</span><br><span class="line">              console.log(b);</span><br><span class="line">              let c&#x3D;yield &quot;快进&quot;;</span><br><span class="line">              console.log(c);</span><br><span class="line">              return &quot;我是函数返回值&quot;;</span><br><span class="line">          &#125;</span><br><span class="line">          let p&#x3D;f(); </span><br><span class="line">          p.next(&quot;我是next方法传值1&quot;);</span><br><span class="line">          p.next(&quot;我是next方法传值2&quot;);</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Dou Gengxin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%BA%8C)/">http://example.com/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%BA%8C)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/ES6/"># ES6</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E5%9B%9B%20/">ES6详细基础(一)</a>
+            
+            
+            <a class="next" rel="next" href="/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%89)/">ES6详细基础(三)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Dou Gengxin | E-mail:1365188369@qq.com
+    </div>
+</footer>
+
+    </div>
+    
+    
+    <div class="GalMenu GalDropDown">
+       <div class="circle" id="gal">
+         <div class="ring">
+           <a href="/" class="menuItem">首页</a>
+           <a href="javascript:history.go(1);" class="menuItem">前进</a>
+           <a href="javascript:$('html,body').animate({scrollTop:0},500);" class="menuItem">顶部</a>
+           <a href="javascript:location.reload();" class="menuItem">刷新</a>
+           <a href="javascript:history.go(-1);" class="menuItem">后退</a>
+         </div>
+         
+             <audio id="audio" src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/audio/niconiconi.mp3"></audio>
+         
+       </div>
+ </div>
+ <script type="text/javascript">
+ var items = document.querySelectorAll('.menuItem'); 
+ for (var i = 0, l = items.length; i < l; i++) {
+     items[i].style.left = (50 - 35 * Math.cos( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%";
+     items[i].style.top = (50 + 35 * Math.sin( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%"
+   }
+ </script>
+ <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/jquery-2.1.1.min.js"><\/script>')</script>	
+ 
+<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/GalMenu.js"></script>
+
+ <script type="text/javascript">
+     $(document).ready(function() {
+     $('body').GalMenu({
+       'menu': 'GalDropDown'
+     })
+   });
+ </script>
+
+
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<!--崩溃欺骗-->
+<script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

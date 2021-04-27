@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/css/GalMenu.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Dou Gengxin">
+
+
+
+
+
+<title>Node.js基础(一) | 代码时代</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">我的主页</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">我的主页</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Node.js基础(一)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Dou Gengxin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 2, 2020&nbsp;&nbsp;12:16:31</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/node/">node</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="概念："><a href="#概念：" class="headerlink" title="概念："></a>概念：</h3><p>Node.js 是一个基于 Chrome V8 引擎的 JavaScript <strong>运行环境</strong>。 </p>
+<p><strong>注：</strong>是 Node 选择了 JavaScript，不是 JavaScript 发展出来了一个 Node。</p>
+<h3 id="运行命令："><a href="#运行命令：" class="headerlink" title="运行命令："></a>运行命令：</h3><h4 id="1-查看node版本号"><a href="#1-查看node版本号" class="headerlink" title="1. 查看node版本号"></a>1. 查看node版本号</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-查看NPM命令的版本号"><a href="#2-查看NPM命令的版本号" class="headerlink" title="2.查看NPM命令的版本号"></a>2.查看NPM命令的版本号</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-Node命令运行js文件"><a href="#3-Node命令运行js文件" class="headerlink" title="3. Node命令运行js文件"></a>3. Node命令运行js文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node 文件名(.后缀名)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注：</strong>后缀名可以用省略</p>
+<h4 id="4-清屏命令"><a href="#4-清屏命令" class="headerlink" title="4. 清屏命令"></a>4. 清屏命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cls</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-返回上一级目录"><a href="#5-返回上一级目录" class="headerlink" title="5. 返回上一级目录"></a>5. 返回上一级目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-返回根目录"><a href="#6-返回根目录" class="headerlink" title="6. 返回根目录"></a>6. 返回根目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-进入相关目录"><a href="#7-进入相关目录" class="headerlink" title="7. 进入相关目录"></a>7. 进入相关目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd 文件夹名&#x2F;相对路径&#x2F;绝对路径</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-查看当前路径下的文件及文件夹"><a href="#8-查看当前路径下的文件及文件夹" class="headerlink" title="8. 查看当前路径下的文件及文件夹"></a>8. 查看当前路径下的文件及文件夹</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir</span><br></pre></td></tr></table></figure>
+
+<p>注：如果需要切换根目录路径的时候，则需要切换盘符</p>
+<h4 id="9-切换盘符命令"><a href="#9-切换盘符命令" class="headerlink" title="9. 切换盘符命令"></a>9. 切换盘符命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">盘符:</span><br></pre></td></tr></table></figure>
+
+<p>注：可以采用盘符路径切换模式，进行双盘符路径切换。</p>
+<h4 id="10-创建文件夹命令"><a href="#10-创建文件夹命令" class="headerlink" title="10. 创建文件夹命令"></a>10. 创建文件夹命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir&#x2F;md 文件夹的名字</span><br></pre></td></tr></table></figure>
+
+<h4 id="11-删除文件夹命令"><a href="#11-删除文件夹命令" class="headerlink" title="11. 删除文件夹命令"></a>11. 删除文件夹命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rmdir&#x2F;rd 文件夹的名字</span><br></pre></td></tr></table></figure>
+
+<p>采用命令删除，无法恢复。注：目录为非空目录不会删除</p>
+<h4 id="12-帮助命令"><a href="#12-帮助命令" class="headerlink" title="12. 帮助命令"></a>12. 帮助命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">help</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、Node特点"><a href="#二、Node特点" class="headerlink" title="二、Node特点"></a>二、Node特点</h2><p>1.单线程</p>
+<p>2.非阻塞I/O机制</p>
+<p>3.事件环机制/事件驱动</p>
+<h2 id="三、Node全局对象和全局属性"><a href="#三、Node全局对象和全局属性" class="headerlink" title="三、Node全局对象和全局属性"></a>三、Node全局对象和全局属性</h2><p>Node全局对象：global</p>
+<p>ES2020跨平台全局对象：globalThis</p>
+<p>返回当前文件的父级路径（绝对路径）:__dirname</p>
+<p>返回当前文件的绝对路径:__filename</p>
+<h2 id="四、Buffer模块"><a href="#四、Buffer模块" class="headerlink" title="四、Buffer模块"></a>四、Buffer模块</h2><h3 id="概念：-1"><a href="#概念：-1" class="headerlink" title="概念："></a>概念：</h3><p>Buffer模块是Node的核心类库，提供了一种原始的数据存储方法（即二进制形式存储数据）。注：虽然Buffer的存储方式为二进制，但其输出的表现形式为十六进制。</p>
+<h3 id="常用方法："><a href="#常用方法：" class="headerlink" title="常用方法："></a>常用方法：</h3><h4 id="开辟缓存区方法"><a href="#开辟缓存区方法" class="headerlink" title="开辟缓存区方法"></a>开辟缓存区方法</h4><p>1.Buffer.alloc(size[, fill[, encoding]]),根据size的大小开辟缓存区</p>
+<p>size，设置开辟缓存区的大小，单位是字节，一个字节采用两位16进制数表示</p>
+<p>fill，设置缓存区填充值，默认值是0</p>
+<p>encoding，设置编码格式，默认值utf8</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let buf&#x3D; Buffer.alloc(10,&quot;a&quot;,&quot;utf16le&quot;);</span><br><span class="line">console.log(buf);</span><br></pre></td></tr></table></figure>
+
+<p>2.Buffer.from(string[, encoding]);将参数字符串存入缓存区，注：开辟缓存区的大小跟字符串大小一致。</p>
+<p>string,设置需要往缓存区存储的字符串</p>
+<p>encoding，设置编码格式，默认值utf8</p>
+<p>注：在Node中，一个中文字符3个字节</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let buf&#x3D;Buffer.from(&quot;我是web前端班级,1116&quot;);</span><br><span class="line">let buf&#x3D;Buffer.from(&quot;我，&quot;,&quot;utf16le&quot;);</span><br><span class="line">console.log(buf);</span><br></pre></td></tr></table></figure>
+
+<h4 id="输出缓存区的数据"><a href="#输出缓存区的数据" class="headerlink" title="输出缓存区的数据"></a>输出缓存区的数据</h4><p>buf.toString([encoding[, start[, end]]])，将缓存区的内容以字符串的形式输出</p>
+<p>encoding，设置编码格式，默认值utf8</p>
+<p>start，开始输出的位置，默认值0</p>
+<p>end，结束输出的位置，默认值是字符串长度。注：结束位置前的内容会被读取，但结束位置的内容不会被读取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let buf&#x3D;Buffer.from(&quot;我是web前端班级,1116&quot;);</span><br><span class="line">console.log(buf.toString(&quot;utf8&quot;,3,10));</span><br></pre></td></tr></table></figure>
+
+<h4 id="向缓存区写入数据"><a href="#向缓存区写入数据" class="headerlink" title="向缓存区写入数据"></a>向缓存区写入数据</h4><p>buf.write(string[, offset[, length]][, encoding])，将参数字符串写入到已有的缓存区。覆盖式写入</p>
+<p>string,需要写入的字符串</p>
+<p>offset,写入的偏移量，（写入的位置，包含当前位置）</p>
+<p>length，写入的长度。</p>
+<p>encoding，设置编码格式，默认值utf8</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let buf&#x3D;Buffer.alloc(100);</span><br><span class="line">buf.write(&quot;今天是个雾霾天！&quot;,15,9);</span><br><span class="line">console.log(buf.toString());</span><br></pre></td></tr></table></figure>
+
+<p>注：缓存区的大小不会改变，如果后写入的内容少于原来的内容，则只会部分覆盖。</p>
+<h4 id="合并缓存区"><a href="#合并缓存区" class="headerlink" title="合并缓存区"></a>合并缓存区</h4><p>Buffer.concat(list[, totalLength]),合并缓存区,并生成新的缓存区。深拷贝缓存区。</p>
+<p>list,是一个数组类型，表示缓存区的集合</p>
+<p>totalLength,设置合并后的缓存区的长度，默认值是所有缓存区的总长度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let buf1&#x3D;Buffer.from(&quot;刚才班长不在状态！&quot;);</span><br><span class="line">let buf2&#x3D;Buffer.from(&quot;一会下课罚跑圈！&quot;);</span><br><span class="line">&#x2F;&#x2F; console.log(buf1,buf2);</span><br><span class="line">let buf&#x3D;Buffer.concat([buf1,buf2],21)</span><br><span class="line">console.log(buf.toString());</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取缓存区的长度"><a href="#获取缓存区的长度" class="headerlink" title="获取缓存区的长度"></a>获取缓存区的长度</h4><p>buf.length,获取当前缓存区的长度。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let buf&#x3D;Buffer.from(&quot;我是憨憨！&quot;);</span><br><span class="line">console.log(buf.length);</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、模块化"><a href="#五、模块化" class="headerlink" title="五、模块化"></a>五、模块化</h2><h3 id="概念：-2"><a href="#概念：-2" class="headerlink" title="概念："></a>概念：</h3><p>在Node.js中，一个js文件就称之为一个模块（Module）。</p>
+<h3 id="好处："><a href="#好处：" class="headerlink" title="好处："></a>好处：</h3><p>可以提高代码的安全性、维护性和可复用性。</p>
+<h3 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h3><p>1、定义模块：对所需要的业务或功能进行封装。</p>
+<p>2、抛出模块：模块只有一个出口，module.exports/exports。</p>
+<p>3、引入模块：使用require()方法引入。</p>
+<h3 id="案例："><a href="#案例：" class="headerlink" title="案例："></a>案例：</h3><p>封装的js模块文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;1、定义模块</span><br><span class="line">function quire(arr)&#123;</span><br><span class="line">    return [...new Set(arr)];</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;2、抛出</span><br><span class="line">module.exports&#x3D;quire;</span><br></pre></td></tr></table></figure>
+
+<p>需要使用的模块文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;3、引入</span><br><span class="line">let a&#x3D;require(&quot;.&#x2F;quire&quot;);</span><br><span class="line">let arr&#x3D;[1,3,5,2,4,6,2,3,5,6,7,4,6,7,8,];</span><br><span class="line">let arr2&#x3D;[2,3,5,3,4,6,3,,6,7,4,,2,43,5,6,7,7];</span><br><span class="line">console.log(a(arr));</span><br><span class="line">console.log(a(arr2));</span><br></pre></td></tr></table></figure>
+
+<h3 id="Node模块化关键词"><a href="#Node模块化关键词" class="headerlink" title="Node模块化关键词"></a>Node模块化关键词</h3><h4 id="1、定义模板，"><a href="#1、定义模板，" class="headerlink" title="1、定义模板，"></a>1、定义模板，</h4><p>指定义一个具有特定功能的函数/类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function quire(arr) &#123;</span><br><span class="line">  return [...new Set(arr)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、抛出模块"><a href="#2、抛出模块" class="headerlink" title="2、抛出模块"></a>2、抛出模块</h4><p>抛出采用的关键词 module.exports或者exports</p>
+<h5 id="2-1module-exports的抛出方式"><a href="#2-1module-exports的抛出方式" class="headerlink" title="2.1module.exports的抛出方式"></a>2.1module.exports的抛出方式</h5><h6 id="暴露抛出"><a href="#暴露抛出" class="headerlink" title="暴露抛出"></a>暴露抛出</h6><p><strong>语法</strong>:module.exports=方法名/属性名/类名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module.exports&#x3D;quire;</span><br><span class="line">let username&#x3D;&quot;rypy&quot;;</span><br><span class="line">module.exports&#x3D;username;</span><br></pre></td></tr></table></figure>
+
+<h6 id="隐式抛出"><a href="#隐式抛出" class="headerlink" title="隐式抛出"></a>隐式抛出</h6><p>使用变量名抛出</p>
+<p><strong>语法</strong>:module.exports.新变量名=方法名/属性名/类名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let username&#x3D;&quot;admin&quot;;</span><br><span class="line">module.exports.uname&#x3D;username;</span><br></pre></td></tr></table></figure>
+
+<p>直接抛出对象 (推荐使用)</p>
+<p><strong>语法</strong>:module.exports={新的键名:需要抛出的方法名/属性名/类名}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let username&#x3D;&quot;admin123&quot;;</span><br><span class="line">module.exports&#x3D;&#123;&quot;uu&quot;:username&#125;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-2、exports抛出方式"><a href="#2-2、exports抛出方式" class="headerlink" title="2.2、exports抛出方式"></a>2.2、exports抛出方式</h5><p>其是module.exports的引用，实际完成抛出功能的方法还是module.exports</p>
+<p>exports不支持暴露抛出。只能采用重命名变量</p>
+<p><strong>语法</strong>:exports.变量名=方法名/属性名/类名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let pwd&#x3D;&quot;123456&quot;;</span><br><span class="line">exports.pp&#x3D;pwd;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3、抛出使用规则"><a href="#2-3、抛出使用规则" class="headerlink" title="2.3、抛出使用规则"></a>2.3、抛出使用规则</h5><p>如果采用module.exports抛出同键名对象的时候，优先级要高于exports抛出的变量，如果采用module.exports抛出同名变量，exports抛出的也是同名变量，则谁在后面，谁会覆盖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">module.exports&#x3D;&#123;aa:&quot;bbbb&quot;&#125;;&#x2F;&#x2F;不会覆盖，优先级最高</span><br><span class="line">module.exports.aa&#x3D;&quot;bbbb&quot;;</span><br><span class="line">exports.aa&#x3D;&quot;aaa&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>exports是module.exports的引用，当代码在执行的过程中exports会默认转换为module.exports，进行抛出，即实际完成抛出功能的关键词是module.exports</p>
+<h4 id="3、引入模块"><a href="#3、引入模块" class="headerlink" title="3、引入模块"></a>3、引入模块</h4><p>在node模块化中引入只有一个关键词 require</p>
+<p><strong>语法</strong>:require(“绝对路径/相对路径/内置模块的名字/插件的名字”)</p>
+<p>如果引入的是文件路径，则js文件的后缀名可以省略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let a&#x3D;require(&quot;.&#x2F;quire&quot;);</span><br><span class="line">let arr&#x3D;[1,3,5,2,4,6,2,3,5,6,7,4,6,7,8,];</span><br><span class="line">let arr2&#x3D;[2,3,5,3,4,6,3,,6,7,4,,2,43,5,6,7,7];</span><br><span class="line">console.log(a(arr));</span><br><span class="line">console.log(a(arr2));</span><br></pre></td></tr></table></figure>
+
+<h3 id="模块的加载机制"><a href="#模块的加载机制" class="headerlink" title="模块的加载机制"></a>模块的加载机制</h3>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Dou Gengxin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/04/02/Node.js%E5%9F%BA%E7%A1%80(%E4%B8%80)/">http://example.com/2020/04/02/Node.js%E5%9F%BA%E7%A1%80(%E4%B8%80)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Node/"># Node</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/04/06/Node.js%E5%9F%BA%E7%A1%80(%E4%BA%8C)%20/">Node.js基础(二)</a>
+            
+            
+            <a class="next" rel="next" href="/2019/02/04/Vue%E9%A1%B9%E7%9B%AE%E5%9F%BA%E7%A1%80%E6%B5%81%E7%A8%8B/">Vue项目基础流程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Dou Gengxin | E-mail:1365188369@qq.com
+    </div>
+</footer>
+
+    </div>
+    
+    
+    <div class="GalMenu GalDropDown">
+       <div class="circle" id="gal">
+         <div class="ring">
+           <a href="/" class="menuItem">首页</a>
+           <a href="javascript:history.go(1);" class="menuItem">前进</a>
+           <a href="javascript:$('html,body').animate({scrollTop:0},500);" class="menuItem">顶部</a>
+           <a href="javascript:location.reload();" class="menuItem">刷新</a>
+           <a href="javascript:history.go(-1);" class="menuItem">后退</a>
+         </div>
+         
+             <audio id="audio" src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/audio/niconiconi.mp3"></audio>
+         
+       </div>
+ </div>
+ <script type="text/javascript">
+ var items = document.querySelectorAll('.menuItem'); 
+ for (var i = 0, l = items.length; i < l; i++) {
+     items[i].style.left = (50 - 35 * Math.cos( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%";
+     items[i].style.top = (50 + 35 * Math.sin( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%"
+   }
+ </script>
+ <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/jquery-2.1.1.min.js"><\/script>')</script>	
+ 
+<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/GalMenu.js"></script>
+
+ <script type="text/javascript">
+     $(document).ready(function() {
+     $('body').GalMenu({
+       'menu': 'GalDropDown'
+     })
+   });
+ </script>
+
+
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<!--崩溃欺骗-->
+<script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>

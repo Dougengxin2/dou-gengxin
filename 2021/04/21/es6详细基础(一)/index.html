@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/css/GalMenu.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Dou Gengxin">
+
+
+
+
+
+<title>ES6详细基础(四) | 代码时代</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">我的主页</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">我的主页</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ES6详细基础(四)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Dou Gengxin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 21, 2021&nbsp;&nbsp;14:40:40</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/es6/">es6</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="十六、ES6中的面向对象"><a href="#十六、ES6中的面向对象" class="headerlink" title="十六、ES6中的面向对象"></a>十六、ES6中的面向对象</h2><h3 id="类的定义"><a href="#类的定义" class="headerlink" title="类的定义"></a>类的定义</h3><p>语法：class 类名 {}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;定义类，关键词class</span><br><span class="line">class Furist&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;类的使用(类的实例化)，关键词new</span><br><span class="line">let f&#x3D;new Furist();&#x2F;&#x2F;f叫做类的引用</span><br></pre></td></tr></table></figure>
+
+<h3 id="类中的结构"><a href="#类中的结构" class="headerlink" title="类中的结构"></a>类中的结构</h3><p>类中可以定义方法（函数），也可以定义属性。</p>
+<h4 id="类的方法"><a href="#类的方法" class="headerlink" title="类的方法"></a>类的方法</h4><p>类中的方法包含3类，构造方法、成员方法、静态方法</p>
+<h5 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h5><p>关键词constructor </p>
+<p>语法：constructor(){}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Fruit&#123;</span><br><span class="line">    constructor()&#123;&#x2F;&#x2F;类的构造方法</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a>成员方法</h5><p>即一般普通的方法,</p>
+<p>语法：方法名(参数){ }</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Fruit&#123;</span><br><span class="line">    aa(params) &#123;&#125;</span><br><span class="line">    bb()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h5><p>语法：static 方法名(参数){}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Fruit&#123;</span><br><span class="line">    static aa(params) &#123;&#125;</span><br><span class="line">    static bb()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="类方法的使用"><a href="#类方法的使用" class="headerlink" title="类方法的使用"></a>类方法的使用</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Friut&#123;</span><br><span class="line">    constructor(str)&#123;</span><br><span class="line">        console.log(&quot;我是构造方法！&quot;+str);</span><br><span class="line">    &#125;</span><br><span class="line">    aa()&#123;</span><br><span class="line">        console.log(&quot;我是成员方法！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static bb()&#123;</span><br><span class="line">        console.log(&quot;我是静态方法！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;如果需要使用类，必须要先创建类的实例。</span><br><span class="line">let f&#x3D;new Friut();&#x2F;&#x2F;创建了一个Friut类的实例</span><br><span class="line">&#x2F;&#x2F;构造方法，在创建类的实例的时候被调用。</span><br><span class="line">let f1&#x3D;new Friut(&quot;我是憨憨&quot;);</span><br><span class="line">&#x2F;&#x2F;上面new的变量名，专业术语叫 类的引用。</span><br><span class="line">&#x2F;&#x2F;成员方法只能使用引用来调用</span><br><span class="line">f.aa();</span><br><span class="line">&#x2F;&#x2F;静态方法只能使用类名来调用</span><br><span class="line">Friut.bb();</span><br><span class="line">Friut.aa();</span><br></pre></td></tr></table></figure>
+
+<h4 id="类的属性"><a href="#类的属性" class="headerlink" title="类的属性"></a>类的属性</h4><p>类中的属性的分类 2类，成员属性，静态属性。</p>
+<h5 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h5><p>语法：属性名即可,可以在成员方法/构造方法中使用 this.属性名 </p>
+<p>注：如果在成员方法中定义的成员属性，需要调用成员方法才可以赋值。如果是静态方法中定义的属性，也需要调用静态方法才可以赋值。</p>
+<h5 id="静态属性"><a href="#静态属性" class="headerlink" title="静态属性"></a>静态属性</h5><p>语法：在静态方法中使用 this.属性名 ,也可以在类中使用关键词 static 属性名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class User&#123;</span><br><span class="line">	interest&#x3D;&quot;haha&quot;;</span><br><span class="line">    static  username&#x3D;&quot;rypy&quot;;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">    	this.username&#x3D;&quot;rypy1&quot;；</span><br><span class="line">    &#125;</span><br><span class="line">    getPwd()&#123;</span><br><span class="line">    	this.pwd&#x3D;&quot;123456&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    static getSex()&#123;</span><br><span class="line">        this.sex&#x3D;&quot;男&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">console.log(User.username);</span><br><span class="line">User.getSex();</span><br><span class="line">console.log(User.sex);</span><br></pre></td></tr></table></figure>
+
+<h3 id="类的继承"><a href="#类的继承" class="headerlink" title="类的继承"></a>类的继承</h3><p>类的继承 关键词 extends,语法：子类 extends 父类</p>
+<p><strong>注：</strong>ES6中类的继承，子类是完全继承父类的全部。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class Fruirt&#123;</span><br><span class="line">    sf&#x3D;true;</span><br><span class="line">    static wss&#x3D;&quot;ABCDEFG&quot;;</span><br><span class="line">    constructor(sf)&#123;</span><br><span class="line">        &#x2F;&#x2F;this.sf&#x3D;sf;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        console.log(&quot;我可以吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static getPi()&#123;</span><br><span class="line">        console.log(&quot;我有皮&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Apple extends Fruirt&#123;</span><br><span class="line">&#125;</span><br><span class="line">let ap&#x3D;new Apple(false);</span><br><span class="line">console.log(Apple.wss);</span><br><span class="line">console.log(ap.sf);</span><br><span class="line">ap.eating()</span><br><span class="line">Apple.getPi()</span><br></pre></td></tr></table></figure>
+
+<h3 id="类的多态"><a href="#类的多态" class="headerlink" title="类的多态"></a>类的多态</h3><h4 id="成员方法-静态方法"><a href="#成员方法-静态方法" class="headerlink" title="成员方法/静态方法"></a>成员方法/静态方法</h4><p>成员属性/静态属性可以直接实现子类的多态，但是，如果构造方法需要实现多态，必须在子类中调用父类的构造方法。</p>
+<p>子类中调用父类的构造方法，采用 super()。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">class Fruirt&#123;</span><br><span class="line">    sf&#x3D;true;</span><br><span class="line">    static wss&#x3D;&quot;ABCDEFG&quot;;</span><br><span class="line">    constructor(sf)&#123;</span><br><span class="line">        this.sf&#x3D;sf;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        console.log(&quot;我可以吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static getPi()&#123;</span><br><span class="line">        console.log(&quot;我有皮&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Apple extends Fruirt&#123;</span><br><span class="line">    sf&#x3D;false;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        super(&quot;我是子类的父类&quot;);</span><br><span class="line">        this.hh&#x3D;&quot;我有核&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        console.log(&quot;我还很绿，不能吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let f&#x3D;new Fruirt();</span><br><span class="line">let ap&#x3D;new Apple();</span><br><span class="line">console.log(ap.sf);</span><br><span class="line">console.log(ap.hh);</span><br><span class="line">ap.eating();</span><br><span class="line">&#x2F;&#x2F; let f&#x3D;new Fruirt();</span><br><span class="line">&#x2F;&#x2F; console.log(f.sf);&#x2F;&#x2F;undefined</span><br><span class="line">console.log(f.sf);&#x2F;&#x2F;undefined</span><br></pre></td></tr></table></figure>
+
+<p>使用new创建的实例，实例与实例之间互补干扰，各自有各自的作用域。</p>
+<h4 id="静态方法和静态属性"><a href="#静态方法和静态属性" class="headerlink" title="静态方法和静态属性"></a>静态方法和静态属性</h4><p>静态属性在用子类的类名重新赋值的时候，不会影响父类，但如果使用父类的类名给静态属性进行赋值，则会影响子类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;情况一</span><br><span class="line">&#x2F;&#x2F; Apple.wss&#x3D;&quot;我是重新赋值的内容&quot;;</span><br><span class="line">&#x2F;&#x2F; console.log(Fruirt.wss);</span><br><span class="line">&#x2F;&#x2F;情况二</span><br><span class="line">Fruirt.wss&#x3D;&quot;我是重新2&quot;;</span><br><span class="line">console.log(Apple.wss);</span><br></pre></td></tr></table></figure>
+
+<h3 id="super和this关键词"><a href="#super和this关键词" class="headerlink" title="super和this关键词"></a>super和this关键词</h3><h4 id="super关键词"><a href="#super关键词" class="headerlink" title="super关键词"></a>super关键词</h4><p>用在子类中，</p>
+<p>如果在子类中需要调用父类的成员方法，可以采用 super.方法名 来使用。注：只能使用在子类成员方法。</p>
+<p>如果在子类中需要使用父类的静态方法，可以采用 super.方法名 来使用，但只能在子类的静态方法中使用。</p>
+<p>如果在子类的成员方法中需要使用父类的静态方法，可以使用 类名.方法名来调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">class Fruirt&#123;</span><br><span class="line">    sf&#x3D;true;</span><br><span class="line">    static wss&#x3D;&quot;ABCDEFG&quot;;</span><br><span class="line">    constructor(sf)&#123;</span><br><span class="line">        this.sf&#x3D;sf;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        console.log(&quot;我可以吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static getPi()&#123;</span><br><span class="line">        console.log(&quot;我有皮&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Apple extends Fruirt&#123;</span><br><span class="line">    sf&#x3D;false;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        super(&quot;我是子类的父类&quot;);</span><br><span class="line">        this.hh&#x3D;&quot;我有核&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        super.eating();</span><br><span class="line">        Fruirt.getPi();</span><br><span class="line">        console.log(&quot;我还很绿，不能吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static getPii()&#123;</span><br><span class="line">        super.getPi();</span><br><span class="line">        console.log(&quot;我的皮是红色的&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let ap&#x3D;new Apple();</span><br><span class="line">ap.eating();</span><br><span class="line">&#x2F;&#x2F; Apple.getPii();</span><br></pre></td></tr></table></figure>
+
+<h4 id="this关键词"><a href="#this关键词" class="headerlink" title="this关键词"></a>this关键词</h4><p>指向当前类，</p>
+<p>this关键词可以让子类之间的方法进行互相调用。</p>
+<p>规则，成员方法只能成员方法之间互调。静态方法只能静态方法之间互调。</p>
+<p>规则，this 也可以在成员方法中调用成员属性，在静态方法中调用静态属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class Fruirt&#123;</span><br><span class="line">    sf&#x3D;true;</span><br><span class="line">    static wss&#x3D;&quot;ABCDEFG&quot;;</span><br><span class="line">    constructor(sf)&#123;</span><br><span class="line">        this.sf&#x3D;sf;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        console.log(&quot;我可以吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    static getPi()&#123;</span><br><span class="line">        console.log(&quot;我有皮&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Apple extends Fruirt&#123;</span><br><span class="line">    sf&#x3D;false;</span><br><span class="line">    constructor()&#123;</span><br><span class="line">        super(&quot;我是子类的父类&quot;);</span><br><span class="line">        this.hh&#x3D;&quot;我有核&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    eating()&#123;</span><br><span class="line">        this.eating2();</span><br><span class="line">        console.log(&quot;我还很绿，不能吃！&quot;+this.sf);</span><br><span class="line">    &#125;</span><br><span class="line">    eating2()&#123;</span><br><span class="line">        console.log(&quot;我还很红了，可以吃！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">let ap&#x3D;new Apple();</span><br><span class="line">ap.eating();</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Dou Gengxin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%80)/">http://example.com/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%80)/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/ES6/"># ES6</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%89)/">ES6详细基础(三)</a>
+            
+            
+            <a class="next" rel="next" href="/2020/04/08/Node.js%E5%9F%BA%E7%A1%80(%E4%B8%89)%20/">Node.js基础(三)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Dou Gengxin | E-mail:1365188369@qq.com
+    </div>
+</footer>
+
+    </div>
+    
+    
+    <div class="GalMenu GalDropDown">
+       <div class="circle" id="gal">
+         <div class="ring">
+           <a href="/" class="menuItem">首页</a>
+           <a href="javascript:history.go(1);" class="menuItem">前进</a>
+           <a href="javascript:$('html,body').animate({scrollTop:0},500);" class="menuItem">顶部</a>
+           <a href="javascript:location.reload();" class="menuItem">刷新</a>
+           <a href="javascript:history.go(-1);" class="menuItem">后退</a>
+         </div>
+         
+             <audio id="audio" src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/audio/niconiconi.mp3"></audio>
+         
+       </div>
+ </div>
+ <script type="text/javascript">
+ var items = document.querySelectorAll('.menuItem'); 
+ for (var i = 0, l = items.length; i < l; i++) {
+     items[i].style.left = (50 - 35 * Math.cos( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%";
+     items[i].style.top = (50 + 35 * Math.sin( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%"
+   }
+ </script>
+ <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/jquery-2.1.1.min.js"><\/script>')</script>	
+ 
+<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/GalMenu.js"></script>
+
+ <script type="text/javascript">
+     $(document).ready(function() {
+     $('body').GalMenu({
+       'menu': 'GalDropDown'
+     })
+   });
+ </script>
+
+
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<!--崩溃欺骗-->
+<script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
