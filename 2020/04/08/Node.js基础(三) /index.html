@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/css/GalMenu.css">
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Dou Gengxin">
+
+
+
+
+
+<title>Node.js基础(三) | 代码时代</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">我的主页</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">我的主页</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">归档</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                    <a class="menu-item" href="/music">音乐</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Node.js基础(三)</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Dou Gengxin</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">April 8, 2020&nbsp;&nbsp;0:12:42</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/node/">node</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="九、HTTP模块"><a href="#九、HTTP模块" class="headerlink" title="九、HTTP模块"></a>九、HTTP模块</h2><h3 id="1、基本概念"><a href="#1、基本概念" class="headerlink" title="1、基本概念"></a>1、基本概念</h3><h4 id="1-1-交互模式"><a href="#1-1-交互模式" class="headerlink" title="1.1 交互模式"></a>1.1 交互模式</h4><p>B/S：指基于 浏览器（Browser） 和 服务器（Server） 这种交互形式</p>
+<p>C/S：指基于 客户端（Client） 和 服务器（Server） 这种交互形式</p>
+<h4 id="1-2-终端的概念："><a href="#1-2-终端的概念：" class="headerlink" title="1.2 终端的概念："></a>1.2 终端的概念：</h4><p>服务器：在网络节点中，专门对外提供资源服务的机器；</p>
+<p>客户端：在网络节点中，专门用来消费服务的一台电脑；</p>
+<h4 id="1-3-静态资源与动态资源："><a href="#1-3-静态资源与动态资源：" class="headerlink" title="1.3 静态资源与动态资源："></a>1.3 静态资源与动态资源：</h4><p>静态资源：服务器端只需要读取并直接发送给客户端、不需要进一步处理的资源。</p>
+<p>动态资源：服务器端没有现成的资源，需要服务器端动态生成的资源。</p>
+<h3 id="2、Web应用架构"><a href="#2、Web应用架构" class="headerlink" title="2、Web应用架构"></a>2、Web应用架构</h3><p>Client - 客户端，一般指浏览器，浏览器可以通过 HTTP 协议向服务器请求数据。</p>
+<p>Server - 服务端，一般指 Web 服务器，可以接收客户端请求，并向客户端发送响应数据。</p>
+<p>Business - 业务层， 通过 Web 服务器处理应用程序，如与数据库交互，逻辑运算，调用外部程序等。</p>
+<p>Data - 数据层，一般由数据库组成。</p>
+<h3 id="3、http协议通信模型"><a href="#3、http协议通信模型" class="headerlink" title="3、http协议通信模型"></a>3、http协议通信模型</h3><p>数据流形式：请求 -&gt; 处理 -&gt; 响应</p>
+<p>请求：由客户端发起请求；</p>
+<p>处理：由服务器端处理请求；</p>
+<p>响应：服务器端把处理的结果，通过网络发送给客户端</p>
+<p>HTTP 协议会话过程的 4 个步骤</p>
+<p>●建立连接：客户端的浏览器向服务端发出建立连接的请求，服务端给出响应就可以建立连接了。</p>
+<p>●发送请求：客户端按照协议的要求通过连接向服务端发送自己的请求。</p>
+<p>●给出响应：服务端按照客户端的要求给出应答，把结果（HTML 文件）返回给客户端。</p>
+<p>●关闭连接：客户端接到应答后关闭连接</p>
+<h3 id="4、URL组成"><a href="#4、URL组成" class="headerlink" title="4、URL组成"></a>4、URL组成</h3><p>URL是统一资源定位符，一种特殊类型的URI，根据一个 url 能够在全球确定一个唯一的资源，它包含的信息指出文件的位置以及浏览器应该怎么处理它。</p>
+<h4 id="4-1-组成"><a href="#4-1-组成" class="headerlink" title="4.1 组成"></a>4.1 组成</h4><p>协议：//子域名.域名.顶级域名:端口号/目录/文件名.文件后缀?参数=值</p>
+<h4 id="4-2-http协议简介"><a href="#4-2-http协议简介" class="headerlink" title="4.2 http协议简介"></a>4.2 http协议简介</h4><p>HTTP(Hyper Text Transfer Protocol)&lt; 超文本传输协议&gt; 的缩写</p>
+<h5 id="http与https的区别"><a href="#http与https的区别" class="headerlink" title="http与https的区别"></a>http与https的区别</h5><p>相同点：http协议和https，都是超文本传输协议，</p>
+<p>不相同点：</p>
+<p>1）http的参数信息是明文传输，而https的参数信息是加密传输，</p>
+<p>2）https则是具有安全性的ssl加密传输协议。</p>
+<p>3）端口号不同http是80，https是443</p>
+<h5 id="http请求信息的组成"><a href="#http请求信息的组成" class="headerlink" title="http请求信息的组成"></a>http请求信息的组成</h5><p>● 请求方法URI协议/版本</p>
+<p>● 请求头(Request Header)</p>
+<p>● 请求正文</p>
+<h5 id="http响应信息的组成"><a href="#http响应信息的组成" class="headerlink" title="http响应信息的组成"></a>http响应信息的组成</h5><p>●状态行：</p>
+<p>●消息报头：响应报头后述</p>
+<p>●响应正文：服务器返回的资源内容</p>
+<h5 id="常见的状态码"><a href="#常见的状态码" class="headerlink" title="常见的状态码"></a>常见的状态码</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">200 OK	&#x2F;&#x2F; 客户端请求成功</span><br><span class="line">301 Moved Permanently  &#x2F;&#x2F;永久重定向</span><br><span class="line">304 Not Modified    &#x2F;&#x2F;请求资源未发生改变</span><br><span class="line">307 Temporary Redirect    &#x2F;&#x2F;临时重定向</span><br><span class="line">400 Bad Request	&#x2F;&#x2F; 客户端请求有语法错误，不能被服务器所理解</span><br><span class="line">401 Unauthorized &#x2F;&#x2F; 请求未经授权，这个状态代码必须和WWW-Authenticate 报头域一起使用</span><br><span class="line">403 Forbidden	&#x2F;&#x2F; 无权限访问，服务器收到请求，但是拒绝提供服务</span><br><span class="line">404 Not Found	&#x2F;&#x2F; 请求资源不存在，eg：输入了错误的 URL</span><br><span class="line">500 Internal Server Error &#x2F;&#x2F; 服务器发生不可预期的错误</span><br><span class="line">502 Bad Gateway  &#x2F;&#x2F;请求超时</span><br><span class="line">503 Server Unavailable	&#x2F;&#x2F; 服务器当前不能处理客户端的请求，一段时间后可能恢复正常</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、Path模块"><a href="#5、Path模块" class="headerlink" title="5、Path模块"></a>5、Path模块</h3><p>path模块，做路径的规范（拼接、获取某一部分，获取绝对路径/相对路径）</p>
+<h4 id="引入方式："><a href="#引入方式：" class="headerlink" title="引入方式："></a>引入方式：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const path&#x3D;require(&quot;path&quot;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h4><h5 id="1、path-basename-path-ext"><a href="#1、path-basename-path-ext" class="headerlink" title="1、path.basename(path[, ext])"></a>1、path.basename(path[, ext])</h5><p>获取当前路径参数的最后一部(即文件名字/文件夹的名字)，以“/”为截取目标</p>
+<h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h6><p>path,操作路径（绝对路径/相对路径）</p>
+<p>ext，截取内容，此内容是被忽略掉,注：截取是从右向左一一匹配。匹配不上截取失败。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.log(__filename);</span><br><span class="line">console.log(path.basename(__filename));&#x2F;&#x2F;03_Path模块.js</span><br><span class="line">console.log(path.basename(__dirname));&#x2F;&#x2F;1.29</span><br><span class="line">console.log(path.basename(&quot;&#x2F;a&#x2F;b&#x2F;c&#x2F;&quot;));&#x2F;&#x2F;c</span><br><span class="line">console.log(path.basename(__filename,&quot;s&quot;));&#x2F;&#x2F;03_Path模块.j</span><br><span class="line">console.log(path.basename(__filename,&quot;ss&quot;));&#x2F;&#x2F;03_Path模块.js</span><br><span class="line">console.log(path.basename(__filename,&quot;块.js&quot;));&#x2F;&#x2F;03_Path模块</span><br></pre></td></tr></table></figure>
+
+<h5 id="2、path-delimiter"><a href="#2、path-delimiter" class="headerlink" title="2、path.delimiter"></a>2、path.delimiter</h5><p>获取当前运行环境的结束符</p>
+<p>windows的结束符是；</p>
+<p>其它系统是 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.delimiter);</span><br></pre></td></tr></table></figure>
+
+<h5 id="3、path-dirname-path"><a href="#3、path-dirname-path" class="headerlink" title="3、path.dirname(path)"></a>3、path.dirname(path)</h5><p>获取当前目录的父级目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.dirname(__filename));&#x2F;&#x2F;D:\Work space\project-node\1.29</span><br><span class="line">console.log(path.dirname(&quot;.&#x2F;a&#x2F;b&#x2F;c&quot;));</span><br></pre></td></tr></table></figure>
+
+<h5 id="4、path-extname-path"><a href="#4、path-extname-path" class="headerlink" title="4、path.extname(path)"></a>4、path.extname(path)</h5><p>获取文件路径的后缀名</p>
+<p>注：它是以最后一个“.”作为截取，截取后面的部分</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.extname(&quot;.&#x2F;a&#x2F;a&#x2F;b&quot;));&#x2F;&#x2F;空</span><br><span class="line">console.log(path.extname(__filename));&#x2F;&#x2F;.js</span><br><span class="line">console.log(path.extname(__dirname));&#x2F;&#x2F;.29（特例）</span><br><span class="line">console.log(path.extname(&quot;.&#x2F;a&#x2F;b&#x2F;c&#x2F;d&#x2F;e.f.g&quot;));&#x2F;&#x2F;.g（特例）</span><br><span class="line">console.log(path.extname(&quot;.&#x2F;a&#x2F;b&#x2F;c&#x2F;d&#x2F;e.f.&quot;));&#x2F;&#x2F;.（特例）</span><br></pre></td></tr></table></figure>
+
+<h5 id="5、path-isAbsolute-path"><a href="#5、path-isAbsolute-path" class="headerlink" title="5、path.isAbsolute(path)"></a>5、path.isAbsolute(path)</h5><p>判断当前路径是否是绝对路径,返回值是布尔类型</p>
+<p>注：此方法是以”/“为判断依据，如果是“/”开始责备视为绝对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.isAbsolute(__dirname));&#x2F;&#x2F;true</span><br><span class="line">console.log(path.isAbsolute(&quot;&#x2F;a&#x2F;v&#x2F;c&#x2F;x&quot;));&#x2F;&#x2F;true</span><br><span class="line">console.log(path.isAbsolute(&quot;D:&#x2F;a&#x2F;v&#x2F;c&#x2F;x&quot;));&#x2F;&#x2F;true</span><br><span class="line">console.log(path.isAbsolute(&quot;&#x2F;&#x2F;a&#x2F;b&#x2F;c&#x2F;d&quot;));&#x2F;&#x2F;true</span><br><span class="line">console.log(path.isAbsolute(&quot;.&#x2F;a&#x2F;v&#x2F;c&#x2F;x&quot;));&#x2F;&#x2F;false</span><br><span class="line">console.log(path.isAbsolute(&quot;..&#x2F;a&#x2F;v&#x2F;c&#x2F;x&quot;));&#x2F;&#x2F;false</span><br><span class="line">console.log(path.isAbsolute(&quot;D&#x2F;a&#x2F;v&#x2F;c&#x2F;x&quot;));&#x2F;&#x2F;false</span><br></pre></td></tr></table></figure>
+
+<h5 id="6、path-join-…paths"><a href="#6、path-join-…paths" class="headerlink" title="6、path.join([…paths])"></a>6、path.join([…paths])</h5><p>路径的拼接,返回值是一个路经字符串形式</p>
+<p>参数路劲与参数路径采用，隔开，可以不使用”/“</p>
+<p>注，路径的拼接支持”../“,”./“,会将其转义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.join(&quot;a&quot;,&quot;b&quot;));&#x2F;&#x2F; a\b</span><br><span class="line">console.log(path.join(__dirname,&quot;b&quot;));&#x2F;&#x2F;D:\Work space\project-node\12.26\b</span><br><span class="line">console.log(path.join(__dirname,&quot;1.js&quot;));&#x2F;&#x2F;D:\Work space\project-node\1.29\1.js</span><br><span class="line">console.log(path.join(__dirname,&quot;..&#x2F;..&#x2F;..&#x2F;a&#x2F;b&#x2F;index.html&quot;));&#x2F;&#x2F;D:\a\b\index.html</span><br><span class="line">console.log(path.join(__dirname,__dirname,&quot;a&quot;,&quot;b&quot;));</span><br><span class="line">console.log(path.join(__dirname,&quot;aa&quot;,&quot;1.js&quot;));&#x2F;&#x2F;D:\Work space\project-node\1.29\aa\1.js</span><br><span class="line">console.log(path.join(__dirname,__filename));&#x2F;&#x2F;D:\Work space\project-node\1.29\D:\Work space\project-node\1.29\03_Path模块.js</span><br></pre></td></tr></table></figure>
+
+<h5 id="7、path-normalize-path"><a href="#7、path-normalize-path" class="headerlink" title="7、path.normalize(path)"></a>7、path.normalize(path)</h5><p>规范化路径</p>
+<p>注：此方法只支持 “./“的路径规范。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.normalize(__filename));&#x2F;&#x2F;绝对路径没有任何效果</span><br><span class="line">console.log(path.normalize(&quot;.&#x2F;a&#x2F;b&#x2F;c&#x2F;s&quot;));&#x2F;&#x2F;以&quot;.&quot;开始的相对路径，此方法可以将&quot;.&#x2F;&quot;省略。</span><br><span class="line">console.log(path.normalize(&quot;..&#x2F;a&#x2F;b&#x2F;d&#x2F;c&quot;));&#x2F;&#x2F;以&quot;..&#x2F;&quot;开始的相对路径，此方法只会将&quot;&#x2F;&quot;转换为&quot;\&quot;</span><br><span class="line">console.log(path.normalize(&quot;ff&#x2F;ee&#x2F;..&#x2F;..&#x2F;a&#x2F;b&#x2F;c&#x2F;d&quot;));&#x2F;&#x2F;a\b\c\d</span><br><span class="line">console.log(path.normalize(&quot;&#x2F;a&#x2F;b&#x2F;c&#x2F;d&#x2F;e&quot;));&#x2F;&#x2F;    \a\b\c\d\e</span><br><span class="line">console.log(path.normalize(&quot;&#x2F;&#x2F;a&#x2F;b&#x2F;c&#x2F;d&quot;));&#x2F;&#x2F; \\a\b\c\d</span><br></pre></td></tr></table></figure>
+
+<h5 id="8、path-parse-path"><a href="#8、path-parse-path" class="headerlink" title="8、path.parse(path)"></a>8、path.parse(path)</h5><p>将路径参数转换为对象，对象中包含（盘符，父级路径、文件名全名，后缀名、文件名）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(path.parse(__filename));</span><br></pre></td></tr></table></figure>
+
+<h3 id="6、URL模块"><a href="#6、URL模块" class="headerlink" title="6、URL模块"></a>6、URL模块</h3><p>url模块推荐使用 WHATWG 标准的新API。</p>
+<h4 id="组成："><a href="#组成：" class="headerlink" title="组成："></a>组成：</h4><p>协议://子域名.域名.顶级域名:端口号/目录/文件名.文件后缀?参数=值#标识</p>
+<p>URL对象：返回一个URL对象，对象中包含(源地址、主机地址,协议，域名+端口，域名，端口号，资源路由，参数字符串，参数对象，标识符)</p>
+<p><strong>注：</strong>参数字符串会默认将中文字符进行编码操作</p>
+<h4 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new URL(input[, base]);</span><br></pre></td></tr></table></figure>
+
+<p>input：要解析的绝对或相对的 URL。，注：如果input为绝对url,则不需要base属性，否则需要</p>
+<p>base：主机地址</p>
+<p><strong>注：</strong>使用URL模块不需要引入，直接创建实例就可以生成URL对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let urlstr&#x3D;&#96;https:&#x2F;&#x2F;www.baidu.com:1234&#x2F;a&#x2F;b&#x2F;c&#x2F;index.html?username&#x3D;rypy&amp;pwd&#x3D;123456#aaa&#96;;</span><br><span class="line">let urlObj&#x3D;new URL(urlstr);&#x2F;&#x2F;创建一个URL实例，会将url类型的字符串转换为URL对象类型。</span><br><span class="line">console.log(urlObj);</span><br><span class="line">console.log(urlObj.origin);</span><br><span class="line">console.log(urlObj.protocol);</span><br><span class="line">console.log(urlObj.pathname);</span><br><span class="line">注：searchParams类型的存储形式是Map数据结构。</span><br><span class="line">console.log(urlObj.searchParams.get(&quot;username&quot;));</span><br><span class="line">let urlstr&#x3D;&#96;&#x2F;a&#x2F;b&#x2F;c&#x2F;index.js&#96;;&#x2F;&#x2F;目录（路由&#x2F;资源路由）</span><br><span class="line">&#x2F;&#x2F;如果url字符串是相对URL不是绝对URL，则new实例的时候需要第二个参数，设置一个虚拟的服务器地址。</span><br><span class="line">let urlObj&#x3D;new URL(urlstr,&#96;http:&#x2F;&#x2F;abc.abc.abc:1234&#96;);</span><br><span class="line">console.log(urlObj);</span><br></pre></td></tr></table></figure>
+
+<h3 id="7、Querystring模块"><a href="#7、Querystring模块" class="headerlink" title="7、Querystring模块"></a>7、Querystring模块</h3><p>querystring模块，用来解析和格式化url携带的参数。</p>
+<h4 id="1、引用-parse-str-sep-eq-options"><a href="#1、引用-parse-str-sep-eq-options" class="headerlink" title="1、引用.parse(str[, sep[, eq[, options]]])"></a>1、引用.parse(str[, sep[, eq[, options]]])</h4><p>将字符串类型的URL序列参数(浏览器地址栏的参数形式)，转换为Object类型的对象,自带中文解码操作，可以将中文字符由原来的编码解析为中文汉字。</p>
+<h5 id="参数-1"><a href="#参数-1" class="headerlink" title="参数"></a>参数</h5><p>str URL格式的字符串参数序列</p>
+<p>sep,设置将URL字符串分割为对象的键值对的标志，默认值是”&amp;”</p>
+<p>eq,设置生成对象的键名与键值的分割标志，默认值是“=”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">let urlstr&#x3D;&#96;username&#x3D;rypy&amp;pwd&#x3D;123456&#96;;</span><br><span class="line">console.log(qs.parse(urlstr));&#x2F;&#x2F;[Object: null prototype] &#123; username: &#39;rypy&#39;, pwd: &#39;123456&#39; &#125;</span><br><span class="line">console.log(qs.parse(urlstr,&quot;&#x3D;&quot;));&#x2F;&#x2F;[Object: null prototype] &#123; &#39;123456&#39;: &#39;&#39;, username: &#39;&#39;, &#39;rypy&amp;pwd&#39;: &#39;&#39; &#125;</span><br><span class="line">let urlstr&#x3D;&#96;username:&quot;我是web&quot;|pwd:123456&#96;;</span><br><span class="line">console.log(qs.parse(urlstr,&quot;|&quot;,&quot;:&quot;));</span><br></pre></td></tr></table></figure>
+
+<h4 id="2、引用-stringify-obj-sep-eq-options"><a href="#2、引用-stringify-obj-sep-eq-options" class="headerlink" title="2、引用.stringify(obj[, sep[, eq[, options]]])"></a>2、引用.stringify(obj[, sep[, eq[, options]]])</h4><p>将Object类型的对象转换为URL格式的参数序列字符串。自带编码功能，可以将中文字符转换为十六进制的值。</p>
+<h5 id="参数-2"><a href="#参数-2" class="headerlink" title="参数"></a>参数</h5><p>obj 需要转换的对象</p>
+<p>sep,设置拼接字符串的键值对的符号 默认值是“&amp;”</p>
+<p>eq,设置拼接字符串的键名与键值的符号 默认值是“=”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let user&#x3D;&#123;username:&quot;我是web&quot;,pwd:123456&#125;;</span><br><span class="line">console.log(qs.stringify(user));</span><br><span class="line">let urlstr&#x3D;qs.stringify(user);</span><br><span class="line">console.log(qs.parse(urlstr));</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、引用-escape-str"><a href="#3、引用-escape-str" class="headerlink" title="3、引用.escape(str)"></a>3、引用.escape(str)</h4><p>将中文字符进行编码操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">let str&#x3D;&#96;我是web学生&#96;;</span><br><span class="line">console.log(qs.escape(str));</span><br></pre></td></tr></table></figure>
+
+<h4 id="4、引用-unescape-str"><a href="#4、引用-unescape-str" class="headerlink" title="4、引用.unescape(str)"></a>4、引用.unescape(str)</h4><p>将编码后的中文字符进行解码操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let str&#x3D;&#96;我是web学生&#96;;</span><br><span class="line">let str2&#x3D;qs.escape(str);</span><br><span class="line">console.log(qs.unescape(str2));</span><br></pre></td></tr></table></figure>
+
+<h3 id="8、http原生创建启动服务代码"><a href="#8、http原生创建启动服务代码" class="headerlink" title="8、http原生创建启动服务代码"></a>8、http原生创建启动服务代码</h3><p>使用http模块 创建服务基本步骤3步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;1、引入http模块</span><br><span class="line">const http&#x3D;require(&quot;http&quot;);</span><br><span class="line">&#x2F;&#x2F;2、创建http实例</span><br><span class="line">&#x2F;&#x2F;创建实例采用createServer(callback)</span><br><span class="line">&#x2F;&#x2F;回调函数中含有两个形参，req,代表请求对象(request),res代表响应对象(response)</span><br><span class="line">&#x2F;&#x2F;request请求对象，用来获取请求相关信息的，请求携带的参数，请求头部的信息等。</span><br><span class="line">&#x2F;&#x2F;response响应对象，用来给客户端发送响应信息，响应头部，响应内容等</span><br><span class="line">const server&#x3D; http.createServer((req,res)&#x3D;&gt;&#123;&#125;);</span><br><span class="line">&#x2F;&#x2F;3、设置端口号 (1~65398)</span><br><span class="line">采用listen()方法</span><br><span class="line">&#x2F;&#x2F;参数一，端口号,</span><br><span class="line">&#x2F;&#x2F;参数二，局域网IP地址(本地TCP&#x2F;IP地址)，可以省略，省略的情况下域名为localhost,IP地址为127.0.0.1。</span><br><span class="line">参数三，回调函数，可以省略，功能，启动服务的时候，服务器正常启动，可执行此回调函数。</span><br><span class="line">server.listen(1234,&quot;10.10.89.85&quot;,()&#x3D;&gt;&#123;</span><br><span class="line">    console.log(&quot;服务器已启动，IP地址是10.10.89.85，端口号1234&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="9、http原生响应内容到浏览器"><a href="#9、http原生响应内容到浏览器" class="headerlink" title="9、http原生响应内容到浏览器"></a>9、http原生响应内容到浏览器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">const http&#x3D;require(&quot;http&quot;);</span><br><span class="line">const server&#x3D;http.createServer((req,res)&#x3D;&gt;&#123;</span><br><span class="line">    &#x2F;&#x2F;在node原生http模块中，如果只响应一个首页路由，可以直接书写响应内容。</span><br><span class="line">    &#x2F;&#x2F;当需要给浏览器返回中文汉字的时候，必须要设置响应头部的编码格式。</span><br><span class="line">    &#x2F;&#x2F;设置响应头部，采用的方法writeHead()</span><br><span class="line">    &#x2F;&#x2F;writeHead() 参数1,设置响应状态码 ,参数2,设置状态的码的消息(可省略，但是不能是中文),参数3 对象的形式,设置 Content-Type属性的值，其值可以设置资源文件的类型。</span><br><span class="line">    &#x2F;&#x2F;res.writeHead(400,&quot;this is a big error!&quot;,&#123;&quot;Content-Type&quot;:&quot;text&#x2F;html;charset&#x3D;utf8;&quot;&#125;);&#x2F;&#x2F;设置响应html文件的MIME类型。</span><br><span class="line">    res.writeHead(400,&quot;this is a big error!&quot;,&#123;&quot;Content-Type&quot;:&quot;text&#x2F;plain;charset&#x3D;utf8;&quot;&#125;);&#x2F;&#x2F;设置响应html文件的MIME类型。</span><br><span class="line">    &#x2F;&#x2F;MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型，又称文档类型。功能：告知浏览器，当前响应的文件类型，</span><br><span class="line">    &#x2F;&#x2F;res.write(),向浏览器端响应输出内容。&#x2F;&#x2F;注：write()可以与write()方法本身和end()，同时返回响应内容，而且是可以做拼接操作。</span><br><span class="line">    res.write(&quot;我是write第一个方法响应的内容&quot;);</span><br><span class="line">    res.write(&quot;我是write第二个方法响应的内容&quot;);</span><br><span class="line">     &#x2F;&#x2F;res.end();&#x2F;&#x2F;结束响应并向浏览器端传送，参数内容，且参数内容可以响应到浏览器内容区。</span><br><span class="line">    res.end(&#96;&lt;h1 style&#x3D;&quot;color:red&quot;&gt;hello node!&lt;&#x2F;h1&gt;我检查口罩！&#96;);</span><br><span class="line">    &#x2F;&#x2F;注：end方法必须要放置在响应内容的最后面。否则会报错。</span><br><span class="line">    &#x2F;&#x2F;注：如果修改了服务器端代码，必须重新启动服务。</span><br><span class="line">&#125;);</span><br><span class="line">server.listen(1234);</span><br><span class="line">&#x2F;&#x2F;注：如果在启动的时候出现 address already in use 10.10.89.85:1234，就代表域名和端口号重复，目前有该域名和端口号的服务启动，出现错误的解决办法：修改域名&#x2F;IP,或者修改端口号。</span><br><span class="line">&#x2F;&#x2F;命令行终止node启动的服务 ctrl+c</span><br></pre></td></tr></table></figure>
+
+<h3 id="10、http模块响应资源文件"><a href="#10、http模块响应资源文件" class="headerlink" title="10、http模块响应资源文件"></a>10、http模块响应资源文件</h3><p>MIME类型，是多用途互联网邮件扩展类型，又称文档类型，功能告诉浏览器，我当前服务器传递的资源是什么类型，不同的类型，浏览器会做不同的响应。</p>
+<p>常见的MIME类型(通用型)：</p>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>文件格式</strong></th>
+<th align="center"><strong>MIME类型</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>超文本标记语言文本</td>
+<td>.html</td>
+<td align="center">text/html</td>
+</tr>
+<tr>
+<td>xml文档</td>
+<td>.xml</td>
+<td align="center">text/xml</td>
+</tr>
+<tr>
+<td>XHTML文档</td>
+<td>.xhtml</td>
+<td align="center">application/xhtml+xml</td>
+</tr>
+<tr>
+<td>普通文本</td>
+<td>.txt</td>
+<td align="center">text/plain</td>
+</tr>
+<tr>
+<td>RTF文本</td>
+<td>.rtf</td>
+<td align="center">application/rtf</td>
+</tr>
+<tr>
+<td>PDF文档</td>
+<td>.pdf</td>
+<td align="center">application/pdf</td>
+</tr>
+<tr>
+<td>PNG图像</td>
+<td>.png</td>
+<td align="center">image/png</td>
+</tr>
+<tr>
+<td>Microsoft Word文件</td>
+<td>.word</td>
+<td align="center">application/msword</td>
+</tr>
+<tr>
+<td>GIF图形</td>
+<td>.gif</td>
+<td align="center">image/gif</td>
+</tr>
+<tr>
+<td>JPEG图形</td>
+<td>.jpeg,.jpg</td>
+<td align="center">image/jpeg</td>
+</tr>
+<tr>
+<td>css文件</td>
+<td>.css</td>
+<td align="center">text/css</td>
+</tr>
+<tr>
+<td>Json文件</td>
+<td>.json</td>
+<td align="center">application/json</td>
+</tr>
+<tr>
+<td>JS文件</td>
+<td>.js</td>
+<td align="center">text/JavaScript</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">const http&#x3D;require(&quot;http&quot;);</span><br><span class="line">const fs&#x3D;require(&quot;fs&quot;);</span><br><span class="line">const path&#x3D;require(&quot;path&quot;);</span><br><span class="line">http.createServer(async (req,res)&#x3D;&gt;&#123;</span><br><span class="line">    let [err,data] &#x3D;await new Promise(resolve&#x3D;&gt;&#123;</span><br><span class="line">fs.readFile(path.join(__dirname,&quot;.&#x2F;css&#x2F;index.css&quot;),&quot;utf8&quot;,(err,data)&#x3D;&gt;&#123;</span><br><span class="line">            &#x2F;&#x2F; if(err)resolve(err);</span><br><span class="line">            &#x2F;&#x2F; else resolve(data);</span><br><span class="line">            resolve([err,data]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    if(err)&#123;</span><br><span class="line">        res.writeHead(200,&quot;ok&quot;,&#123;&quot;Content-type&quot;:&quot;text&#x2F;html;charset&#x3D;utf8;&quot;&#125;);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        res.writeHead(200,&quot;ok&quot;,&#123;&quot;Content-type&quot;:&quot;text&#x2F;css&quot;&#125;);</span><br><span class="line">        res.end(data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).listen(520);</span><br></pre></td></tr></table></figure>
+
+<h3 id="11、http响应静态资源"><a href="#11、http响应静态资源" class="headerlink" title="11、http响应静态资源"></a>11、http响应静态资源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">const http&#x3D;require(&quot;http&quot;);</span><br><span class="line">const path&#x3D;require(&quot;path&quot;);</span><br><span class="line">const fs&#x3D;require(&quot;fs&quot;);</span><br><span class="line">http.createServer(async (req,res)&#x3D;&gt;&#123;</span><br><span class="line">    &#x2F;&#x2F;req.url，获取 资源路由和参数，返回值是一个字符串</span><br><span class="line">    let [urlPath,params]&#x3D;req.url.split(&quot;?&quot;);&#x2F;&#x2F;将资源路由和参数，进行分割</span><br><span class="line">    console.log(params);</span><br><span class="line">    let htmlText&#x3D;&quot;&quot;;&#x2F;&#x2F;此变量用来接收读取文件的内容</span><br><span class="line">    switch(urlPath)&#123;</span><br><span class="line">        &#x2F;&#x2F;注:在服务器端定义路由一定要带&quot;&#x2F;&quot;,如&quot;&#x2F;index.css&quot;,</span><br><span class="line">        &#x2F;&#x2F;注：&quot;&#x2F;&quot;,通常被称作 主路由</span><br><span class="line">        case &quot;&#x2F;index.css&quot;:</span><br><span class="line">            res.writeHead(200,&quot;ok&quot;,&#123;&quot;Content-type&quot;:&quot;text&#x2F;css&quot;&#125;);</span><br><span class="line">            htmlText&#x3D;await getFileData(&quot;css&#x2F;index.css&quot;);</span><br><span class="line">        break;</span><br><span class="line">        case &quot;&#x2F;jquery.min.js&quot;:</span><br><span class="line">            res.writeHead(200,&quot;ok&quot;,&#123;&quot;Content-type&quot;:&quot;text&#x2F;javascript&quot;&#125;);</span><br><span class="line">            htmlText&#x3D;await getFileData(&quot;js&#x2F;jquery.min.js&quot;);break;</span><br><span class="line">        case &quot;&#x2F;index.html&quot;:</span><br><span class="line">            res.writeHead(200,&quot;ok&quot;,&#123;&quot;Content-type&quot;:&quot;text&#x2F;html&quot;&#125;);    </span><br><span class="line">            htmlText&#x3D;await getFileData(&quot;html&#x2F;index.html&quot;);break;</span><br><span class="line">    &#125;</span><br><span class="line">    if(htmlText[0])&#123;</span><br><span class="line">        res.end(htmlText[0]);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        res.end(htmlText[1]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;).listen(1111,&quot;10.10.10.166&quot;);</span><br><span class="line">&#x2F;&#x2F;读取静态资源文件</span><br><span class="line">function getFileData(filepath) &#123;</span><br><span class="line">    return new Promise(resolve&#x3D;&gt;&#123;  fs.readFile(path.join(__dirname,&quot;public&quot;,filepath),&quot;utf8&quot;,(err,data)&#x3D;&gt;&#123;</span><br><span class="line">            resolve([err,data]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="12、http模参数的获取"><a href="#12、http模参数的获取" class="headerlink" title="12、http模参数的获取"></a>12、http模参数的获取</h3><h4 id="http模块获取get请求参数"><a href="#http模块获取get请求参数" class="headerlink" title="http模块获取get请求参数"></a>http模块获取get请求参数</h4><p><strong>req.url：</strong>获取资源路由和参数</p>
+<p>**”/“**：一般再服务器端称之为主路由，一般用来响应首页</p>
+<p>如果不设置服务器端IP地址，则使用localhost或127.0.0.1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">const http&#x3D;require(&quot;http&quot;);</span><br><span class="line">const qs&#x3D;require(&quot;querystring&quot;);</span><br><span class="line">const &#123;getFilePage&#125;&#x3D;require(&quot;.&#x2F;model&#x2F;fileControl&quot;);</span><br><span class="line">http.createServer(async (req,res)&#x3D;&gt;&#123;</span><br><span class="line">    let err&#x3D;&quot;&quot;;</span><br><span class="line">    let htmlText&#x3D;&quot;&quot;;</span><br><span class="line">    let htmlType&#x3D;&quot;&quot;;</span><br><span class="line">    let [urlPath,params]&#x3D;req.url.split(&quot;?&quot;);</span><br><span class="line">    switch(urlPath)&#123;</span><br><span class="line">        &#x2F;*      静态资源部署区域    *&#x2F;</span><br><span class="line">        case &quot;&#x2F;&quot;:; </span><br><span class="line">        case &quot;&#x2F;index.html&quot;:</span><br><span class="line">            htmlType&#x3D;&quot;text&#x2F;html&quot;;</span><br><span class="line">            [err,htmlText]&#x3D; await getFilePage(&quot;index.html&quot;);</span><br><span class="line">            break;</span><br><span class="line">        case &quot;&#x2F;jquery.min.js&quot;:</span><br><span class="line">           htmlType&#x3D;&quot;text&#x2F;javascript&quot;;</span><br><span class="line">            [err,htmlText] &#x3D; await getFilePage(&quot;.&#x2F;js&#x2F;jquery.min.js&quot;);</span><br><span class="line">            break;</span><br><span class="line">        case &quot;&#x2F;index.js&quot;:</span><br><span class="line">           htmlType&#x3D;&quot;text&#x2F;javascript&quot;;</span><br><span class="line">            [err,htmlText]&#x3D; await getFilePage(&quot;.&#x2F;js&#x2F;index.js&quot;);</span><br><span class="line">            break;</span><br><span class="line">        &#x2F;*   动态资源获取区域   *&#x2F;    </span><br><span class="line">        case &quot;&#x2F;reguest&quot;:</span><br><span class="line">          htmlType&#x3D;&quot;application&#x2F;json&quot;;</span><br><span class="line">          let user&#x3D;qs.parse(params);&#x2F;&#x2F;将url参数类型的对象转换为真正对象</span><br><span class="line">          	if(user.username&#x3D;&#x3D;&#x3D;&quot;admin&quot;&amp;&amp;user.pwd&#x3D;&#x3D;&#x3D;&quot;123456&quot;)&#123; </span><br><span class="line">            	htmlText&#x3D;JSON.stringify(&#123;msg:&quot;登录成功&quot;&#125;);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                htmlText&#x3D;JSON.stringify(&#123;msg:&quot;登录失败&quot;&#125;);</span><br><span class="line">            &#125;        </span><br><span class="line">    &#125;</span><br><span class="line">    if(err)&#123;</span><br><span class="line">        htmlType&#x3D;&quot;text&#x2F;html&quot;;</span><br><span class="line">        htmlText&#x3D;&quot;服务器端出现错误！&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    res.writeHead(200,&quot;ok&quot;,&#123;&quot;Content-Type&quot;:htmlType&#125;);</span><br><span class="line">    res.end(htmlText);&#x2F;&#x2F;只能以字符串的形式返回JSON格式的数据。</span><br><span class="line">&#125;).listen(2222,&quot;10.10.10.166&quot;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="http模块获取post请求参数"><a href="#http模块获取post请求参数" class="headerlink" title="http模块获取post请求参数"></a>http模块获取post请求参数</h4><p>在http原生种如果需要响应post请求并获取参数，需要做事件监听。</p>
+<p><strong>注：</strong>如果监听了data事件就必须监听end事件。且如果监听了end事件，响应的end方法必须写在请求的end事件中，那么当监听了end事件以后，由于请求事件的监听是用同一个请求，所以data事件种回调函数的参数值，可以在end种使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">req.on(&quot;data&quot;,(data)&#x3D;&gt;&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">req.on(&quot;end&quot;,async ()&#x3D;&gt;&#123;&#x2F;&#x2F;end事件中，完成路由的响应</span><br><span class="line">&#x2F;&#x2F;注：如果监听了end事件，响应的end方法必须写在请求的end事件中</span><br><span class="line">        res.end(htmlText);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="十、服务器简介"><a href="#十、服务器简介" class="headerlink" title="十、服务器简介"></a>十、服务器简介</h2><p>常见服务器包括Apache、Apache Tomcat、IIS、Node、Nginx、WebLogic、kangle等。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Dou Gengxin</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/04/08/Node.js%E5%9F%BA%E7%A1%80(%E4%B8%89)%20/">http://example.com/2020/04/08/Node.js%E5%9F%BA%E7%A1%80(%E4%B8%89)%20/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Node/"># Node</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/21/es6%E8%AF%A6%E7%BB%86%E5%9F%BA%E7%A1%80(%E4%B8%80)/">ES6详细基础(四)</a>
+            
+            
+            <a class="next" rel="next" href="/2020/04/06/Node.js%E5%9F%BA%E7%A1%80(%E4%BA%8C)%20/">Node.js基础(二)</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Dou Gengxin | E-mail:1365188369@qq.com
+    </div>
+</footer>
+
+    </div>
+    
+    
+    <div class="GalMenu GalDropDown">
+       <div class="circle" id="gal">
+         <div class="ring">
+           <a href="/" class="menuItem">首页</a>
+           <a href="javascript:history.go(1);" class="menuItem">前进</a>
+           <a href="javascript:$('html,body').animate({scrollTop:0},500);" class="menuItem">顶部</a>
+           <a href="javascript:location.reload();" class="menuItem">刷新</a>
+           <a href="javascript:history.go(-1);" class="menuItem">后退</a>
+         </div>
+         
+             <audio id="audio" src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/audio/niconiconi.mp3"></audio>
+         
+       </div>
+ </div>
+ <script type="text/javascript">
+ var items = document.querySelectorAll('.menuItem'); 
+ for (var i = 0, l = items.length; i < l; i++) {
+     items[i].style.left = (50 - 35 * Math.cos( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%";
+     items[i].style.top = (50 + 35 * Math.sin( - 0.5 * Math.PI - 2 * (1 / l) * i * Math.PI)).toFixed(4) + "%"
+   }
+ </script>
+ <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/jquery-2.1.1.min.js"><\/script>')</script>	
+ 
+<script src="https://cdn.jsdelivr.net/gh/zyoushuo/Blog@master/hexo/js/GalMenu.js"></script>
+
+ <script type="text/javascript">
+     $(document).ready(function() {
+     $('body').GalMenu({
+       'menu': 'GalDropDown'
+     })
+   });
+ </script>
+
+
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<!--崩溃欺骗-->
+<script type="text/javascript" src="/js/src/crash_cheat.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"log":false});</script></body>
+</html>
